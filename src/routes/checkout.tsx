@@ -20,7 +20,7 @@ export const Route = createFileRoute("/checkout")({
       { property: "og:description", content: "Pay with M-Pesa and get your bag delivered anywhere in Kenya." },
     ],
   }),
-  component: Checkout;
+  component: Checkout,
 });
 
 function Checkout() {
