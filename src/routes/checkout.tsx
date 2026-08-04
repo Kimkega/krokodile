@@ -51,9 +51,19 @@ function Checkout() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (items.length === 0) return toast.error("Your cart is empty.");
-    if (!isValidKenyanPhone(form.phone)) return toast.error("Enter a valid Safaricom number.");
-    if (!form.county || !form.subCounty) return toast.error("Select your county and sub-county.");
+    if (items.length === 0) {
+      toast.error("Your cart is empty.");
+      return;
+    }
+    if (!isValidKenyanPhone(form.phone)) {
+      toast.error("Enter a valid Safaricom number.");
+      return;
+    }
+    if (!form.county || !form.subCounty) {
+      toast.error("Select your county and sub-county.");
+      return;
+    }
+
     setSubmitting(true);
     try {
       const res = await createOrder({
