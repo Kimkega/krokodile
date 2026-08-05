@@ -9,6 +9,14 @@ import { ProductCard, type ProductCardData } from "@/components/products/Product
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
+type ShopSearch = {
+  category?: string;
+  q?: string;
+  sort?: "newest" | "price_asc" | "price_desc" | "name";
+  min?: number;
+  max?: number;
+};
+
 const searchSchema = z.object({
   category: z.string().optional(),
   q: z.string().optional(),
@@ -56,7 +64,7 @@ function Shop() {
   const navigate = Route.useNavigate();
 
   const setSearch = (patch: Partial<typeof search>) =>
-    navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true });
+    navigate({ search: (prev: ShopSearch) => ({ ...prev, ...patch }), replace: true });
 
   const { data: categories } = useQuery({
     queryKey: ["categories", "shop"],
@@ -132,14 +140,14 @@ function Shop() {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <Link to="/shop" search={(prev) => ({ ...prev, category: undefined })} className={chip(!category)}>
+            <Link to="/shop" search={(prev: ShopSearch) => ({ ...prev, category: undefined })} className={chip(!category)}>
               All
             </Link>
             {categories?.map((c) => (
               <Link
                 key={c.slug}
                 to="/shop"
-                search={(prev) => ({ ...prev, category: c.slug })}
+                search={(prev: ShopSearch) => ({ ...prev, category: c.slug })}
                 className={chip(category === c.slug)}
               >
                 {c.name}
