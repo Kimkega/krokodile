@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { ProductCard, type ProductCardData } from "@/components/products/ProductCard";
 import { mediaUrl } from "@/lib/media";
-import logo from "@/assets/kroko-logo.png";
+import logoAsset from "@/assets/kroko-logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -84,7 +84,7 @@ function Home() {
             </div>
             <div className="flex justify-center">
               <img
-                src={logo}
+                src={logoAsset.url}
                 alt="KROKO DILE gold crocodile monogram"
                 className="w-64 drop-shadow-[0_20px_45px_rgba(0,0,0,0.55)] md:w-80"
               />

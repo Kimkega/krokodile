@@ -14,6 +14,7 @@ export type SiteSettings = {
   tiktok_url: string | null;
   x_url: string | null;
   free_shipping_threshold: number | null;
+  whatsapp_template: string | null;
 };
 
 export const siteSettingsQuery = {

@@ -1,8 +1,20 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { SiteShell } from "@/components/layout/SiteShell";
-import { formatKes, orderStatusLabel } from "@/lib/format";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { useState } from "react";
+import {
+  BadgeCheck,
+  ChevronLeft,
+  LayoutDashboard,
+  Layers,
+  Megaphone,
+  MessageCircle,
+  Package,
+  Palette,
+  Receipt,
+  Smartphone,
+  Truck,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import logoAsset from "@/assets/kroko-logo.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -13,56 +25,100 @@ export const Route = createFileRoute("/_authenticated/admin")({
       { property: "og:description", content: "Internal dashboard for the KROKO DILE store." },
     ],
   }),
-  component: Admin,
+  component: AdminLayout,
 });
 
-function Admin() {
-  const { data: orders } = useQuery({
-    queryKey: ["admin", "orders"],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("orders")
-        .select("order_code, customer_name, total, status, payment_status, county, created_at")
-        .order("created_at", { ascending: false })
-        .limit(50);
-      return data ?? [];
-    },
-  });
+const NAV = [
+  { to: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
+  { to: "/admin/orders", label: "Orders", icon: Receipt },
+  { to: "/admin/products", label: "Products", icon: Package },
+  { to: "/admin/categories", label: "Categories", icon: Layers },
+  { to: "/admin/couriers", label: "Couriers", icon: Truck },
+  { to: "/admin/ads", label: "Adverts", icon: Megaphone },
+  { to: "/admin/certificates", label: "Authenticity", icon: BadgeCheck },
+  { to: "/admin/whatsapp", label: "WhatsApp", icon: MessageCircle },
+  { to: "/admin/branding", label: "Branding", icon: Palette },
+  { to: "/admin/mpesa", label: "M-Pesa", icon: Smartphone },
+] as const;
+
+function AdminLayout() {
+  const [collapsed, setCollapsed] = useState(false);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <SiteShell>
-      <div className="mx-auto max-w-6xl px-6 py-12">
-        <h1 className="font-display text-4xl">Admin dashboard</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Latest orders across the store.</p>
-
-        <div className="mt-8 overflow-x-auto rounded-sm border border-border">
-          <table className="w-full text-sm">
-            <thead className="bg-secondary/60 text-left text-[10px] tracking-luxe text-muted-foreground">
-              <tr>
-                <th className="px-4 py-3">Order</th>
-                <th className="px-4 py-3">Customer</th>
-                <th className="px-4 py-3">County</th>
-                <th className="px-4 py-3">Total</th>
-                <th className="px-4 py-3">Payment</th>
-                <th className="px-4 py-3">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders?.map((o) => (
-                <tr key={o.order_code} className="border-t border-border">
-                  <td className="px-4 py-3 font-medium">{o.order_code}</td>
-                  <td className="px-4 py-3">{o.customer_name}</td>
-                  <td className="px-4 py-3">{o.county}</td>
-                  <td className="px-4 py-3">{formatKes(Number(o.total))}</td>
-                  <td className="px-4 py-3">{o.payment_status}</td>
-                  <td className="px-4 py-3">{orderStatusLabel(o.status)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {orders?.length === 0 && <p className="p-6 text-sm text-muted-foreground">No orders yet.</p>}
+    <div className="flex min-h-screen w-full bg-background">
+      <aside
+        className={cn(
+          "sticky top-0 hidden h-screen shrink-0 flex-col border-r border-sidebar-border bg-cocoa-gradient transition-[width] duration-300 md:flex",
+          collapsed ? "w-16" : "w-60",
+        )}
+      >
+        <div className="flex items-center gap-2 px-4 py-5">
+          <img src={logoAsset.url} alt="KROKO DILE" className="size-8 shrink-0" />
+          {!collapsed && (
+            <span className="font-display text-lg leading-none text-gold-gradient">KROKO DILE</span>
+          )}
         </div>
+        <nav className="flex-1 space-y-1 px-2">
+          {NAV.map((item) => {
+            const active = "exact" in item && item.exact ? pathname === item.to : pathname.startsWith(item.to);
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={cn(
+                  "flex items-center gap-3 rounded-sm px-3 py-2 text-xs tracking-luxe transition-colors",
+                  active
+                    ? "bg-gold-gradient text-accent-foreground"
+                    : "text-sidebar-foreground/75 hover:bg-sidebar-accent/40 hover:text-sidebar-foreground",
+                )}
+                title={item.label}
+              >
+                <item.icon className="size-4 shrink-0" />
+                {!collapsed && <span>{item.label}</span>}
+              </Link>
+            );
+          })}
+        </nav>
+        <button
+          onClick={() => setCollapsed((c) => !c)}
+          className="m-3 flex items-center justify-center gap-2 rounded-sm border border-sidebar-border py-2 text-[10px] tracking-luxe text-sidebar-foreground/70"
+        >
+          <ChevronLeft className={cn("size-3 transition-transform", collapsed && "rotate-180")} />
+          {!collapsed && "Collapse"}
+        </button>
+      </aside>
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
+          <p className="font-display text-xl">Admin</p>
+          <Link to="/" className="text-[10px] tracking-luxe text-accent">
+            View storefront
+          </Link>
+        </header>
+
+        <nav className="flex gap-2 overflow-x-auto border-b border-border px-3 py-2 md:hidden">
+          {NAV.map((item) => {
+            const active = "exact" in item && item.exact ? pathname === item.to : pathname.startsWith(item.to);
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={cn(
+                  "whitespace-nowrap rounded-full border px-3 py-1.5 text-[10px] tracking-luxe",
+                  active ? "border-accent bg-gold-gradient text-accent-foreground" : "border-border",
+                )}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <main className="min-w-0 flex-1 p-4 md:p-8">
+          <Outlet />
+        </main>
       </div>
-    </SiteShell>
+    </div>
   );
 }

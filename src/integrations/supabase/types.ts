@@ -14,6 +14,81 @@ export type Database = {
   }
   public: {
     Tables: {
+      ads: {
+        Row: {
+          ad_code: string
+          advertiser_name: string
+          amount: number
+          body: string | null
+          checkout_request_id: string | null
+          created_at: string
+          days: number
+          email: string
+          ends_at: string | null
+          id: string
+          image_url: string | null
+          merchant_request_id: string | null
+          mpesa_receipt: string | null
+          payment_message: string | null
+          payment_status: string
+          phone: string
+          placement: string
+          starts_at: string | null
+          status: string
+          target_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          ad_code: string
+          advertiser_name: string
+          amount?: number
+          body?: string | null
+          checkout_request_id?: string | null
+          created_at?: string
+          days?: number
+          email: string
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          merchant_request_id?: string | null
+          mpesa_receipt?: string | null
+          payment_message?: string | null
+          payment_status?: string
+          phone: string
+          placement?: string
+          starts_at?: string | null
+          status?: string
+          target_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          ad_code?: string
+          advertiser_name?: string
+          amount?: number
+          body?: string | null
+          checkout_request_id?: string | null
+          created_at?: string
+          days?: number
+          email?: string
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          merchant_request_id?: string | null
+          mpesa_receipt?: string | null
+          payment_message?: string | null
+          payment_status?: string
+          phone?: string
+          placement?: string
+          starts_at?: string | null
+          status?: string
+          target_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           active: boolean
@@ -46,6 +121,66 @@ export type Database = {
           sort_order?: number
         }
         Relationships: []
+      }
+      certificates: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          issued_to: string | null
+          last_scanned_at: string | null
+          notes: string | null
+          order_id: string | null
+          product_id: string | null
+          product_name: string | null
+          scans: number
+          serial: string | null
+          status: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          issued_to?: string | null
+          last_scanned_at?: string | null
+          notes?: string | null
+          order_id?: string | null
+          product_id?: string | null
+          product_name?: string | null
+          scans?: number
+          serial?: string | null
+          status?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          issued_to?: string | null
+          last_scanned_at?: string | null
+          notes?: string | null
+          order_id?: string | null
+          product_id?: string | null
+          product_name?: string | null
+          scans?: number
+          serial?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certificates_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "certificates_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       couriers: {
         Row: {
@@ -336,6 +471,7 @@ export type Database = {
           description: string | null
           featured: boolean
           id: string
+          low_stock_threshold: number
           material: string | null
           name: string
           price: number
@@ -352,6 +488,7 @@ export type Database = {
           description?: string | null
           featured?: boolean
           id?: string
+          low_stock_threshold?: number
           material?: string | null
           name: string
           price?: number
@@ -368,6 +505,7 @@ export type Database = {
           description?: string | null
           featured?: boolean
           id?: string
+          low_stock_threshold?: number
           material?: string | null
           name?: string
           price?: number
@@ -423,6 +561,7 @@ export type Database = {
           tiktok_url: string | null
           updated_at: string
           whatsapp_number: string | null
+          whatsapp_template: string | null
           x_url: string | null
         }
         Insert: {
@@ -438,6 +577,7 @@ export type Database = {
           tiktok_url?: string | null
           updated_at?: string
           whatsapp_number?: string | null
+          whatsapp_template?: string | null
           x_url?: string | null
         }
         Update: {
@@ -453,6 +593,7 @@ export type Database = {
           tiktok_url?: string | null
           updated_at?: string
           whatsapp_number?: string | null
+          whatsapp_template?: string | null
           x_url?: string | null
         }
         Relationships: []
