@@ -60,11 +60,17 @@ function AdminCouriers() {
         <Button
           className="bg-gold-gradient text-accent-foreground"
           onClick={async () => {
-            if (!name.trim()) return toast.error("Name is required");
+            if (!name.trim()) {
+              toast.error("Name is required");
+              return;
+            }
             const { error } = await supabase
               .from("couriers")
               .insert({ name: name.trim(), kind, phone: phone || null });
-            if (error) return toast.error(error.message);
+            if (error) {
+              toast.error(error.message);
+              return;
+            }
             setName("");
             setPhone("");
             toast.success("Courier added");

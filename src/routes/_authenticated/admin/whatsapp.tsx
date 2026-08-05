@@ -88,12 +88,18 @@ function AdminWhatsApp() {
             <Button
               className="bg-gold-gradient text-accent-foreground"
               onClick={async () => {
-                if (!settings?.id) return toast.error("Site settings not initialised");
+                if (!settings?.id) {
+                  toast.error("Site settings not initialised");
+                  return;
+                }
                 const { error } = await supabase
                   .from("site_settings")
                   .update({ whatsapp_template: value })
                   .eq("id", settings.id);
-                if (error) return toast.error(error.message);
+                if (error) {
+                  toast.error(error.message);
+                  return;
+                }
                 toast.success("Template saved");
                 void qc.invalidateQueries({ queryKey: ["site-settings"] });
               }}

@@ -55,7 +55,10 @@ function AdminCategories() {
         <Button
           className="bg-gold-gradient text-accent-foreground md:col-span-3"
           onClick={async () => {
-            if (!name.trim()) return toast.error("Name is required");
+            if (!name.trim()) {
+              toast.error("Name is required");
+              return;
+            }
             const { error } = await supabase.from("categories").insert({
               name: name.trim(),
               slug: slugify(name),
@@ -63,7 +66,10 @@ function AdminCategories() {
               image_url: image || null,
               sort_order: (categories?.length ?? 0) + 1,
             });
-            if (error) return toast.error(error.message);
+            if (error) {
+              toast.error(error.message);
+              return;
+            }
             setName("");
             setDescription("");
             setImage("");
