@@ -19,8 +19,12 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as OrderCodeRouteImport } from './routes/order.$code'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as AuthenticatedAdminAdsRouteImport } from './routes/_authenticated/admin/ads'
+import { Route as AuthenticatedAdminBrandingRouteImport } from './routes/_authenticated/admin/branding'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin/categories'
+import { Route as AuthenticatedAdminCertificatesRouteImport } from './routes/_authenticated/admin/certificates'
 import { Route as AuthenticatedAdminCouriersRouteImport } from './routes/_authenticated/admin/couriers'
+import { Route as AuthenticatedAdminMpesaRouteImport } from './routes/_authenticated/admin/mpesa'
 import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenticated/admin/orders'
 import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin/products'
 import { Route as AuthenticatedAdminWhatsappRouteImport } from './routes/_authenticated/admin/whatsapp'
@@ -76,10 +80,27 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminAdsRoute = AuthenticatedAdminAdsRouteImport.update({
+  id: '/ads',
+  path: '/ads',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminBrandingRoute =
+  AuthenticatedAdminBrandingRouteImport.update({
+    id: '/branding',
+    path: '/branding',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminCategoriesRoute =
   AuthenticatedAdminCategoriesRouteImport.update({
     id: '/categories',
     path: '/categories',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminCertificatesRoute =
+  AuthenticatedAdminCertificatesRouteImport.update({
+    id: '/certificates',
+    path: '/certificates',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminCouriersRoute =
@@ -88,6 +109,11 @@ const AuthenticatedAdminCouriersRoute =
     path: '/couriers',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminMpesaRoute = AuthenticatedAdminMpesaRouteImport.update({
+  id: '/mpesa',
+  path: '/mpesa',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminOrdersRoute =
   AuthenticatedAdminOrdersRouteImport.update({
     id: '/orders',
@@ -126,8 +152,12 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/order/$code': typeof OrderCodeRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/admin/ads': typeof AuthenticatedAdminAdsRoute
+  '/admin/branding': typeof AuthenticatedAdminBrandingRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
+  '/admin/certificates': typeof AuthenticatedAdminCertificatesRoute
   '/admin/couriers': typeof AuthenticatedAdminCouriersRoute
+  '/admin/mpesa': typeof AuthenticatedAdminMpesaRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
   '/admin/whatsapp': typeof AuthenticatedAdminWhatsappRoute
@@ -143,8 +173,12 @@ export interface FileRoutesByTo {
   '/track': typeof TrackRoute
   '/order/$code': typeof OrderCodeRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/admin/ads': typeof AuthenticatedAdminAdsRoute
+  '/admin/branding': typeof AuthenticatedAdminBrandingRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
+  '/admin/certificates': typeof AuthenticatedAdminCertificatesRoute
   '/admin/couriers': typeof AuthenticatedAdminCouriersRoute
+  '/admin/mpesa': typeof AuthenticatedAdminMpesaRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
   '/admin/whatsapp': typeof AuthenticatedAdminWhatsappRoute
@@ -163,8 +197,12 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/order/$code': typeof OrderCodeRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/_authenticated/admin/ads': typeof AuthenticatedAdminAdsRoute
+  '/_authenticated/admin/branding': typeof AuthenticatedAdminBrandingRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
+  '/_authenticated/admin/certificates': typeof AuthenticatedAdminCertificatesRoute
   '/_authenticated/admin/couriers': typeof AuthenticatedAdminCouriersRoute
+  '/_authenticated/admin/mpesa': typeof AuthenticatedAdminMpesaRoute
   '/_authenticated/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRoute
   '/_authenticated/admin/whatsapp': typeof AuthenticatedAdminWhatsappRoute
@@ -183,8 +221,12 @@ export interface FileRouteTypes {
     | '/admin'
     | '/order/$code'
     | '/product/$slug'
+    | '/admin/ads'
+    | '/admin/branding'
     | '/admin/categories'
+    | '/admin/certificates'
     | '/admin/couriers'
+    | '/admin/mpesa'
     | '/admin/orders'
     | '/admin/products'
     | '/admin/whatsapp'
@@ -200,8 +242,12 @@ export interface FileRouteTypes {
     | '/track'
     | '/order/$code'
     | '/product/$slug'
+    | '/admin/ads'
+    | '/admin/branding'
     | '/admin/categories'
+    | '/admin/certificates'
     | '/admin/couriers'
+    | '/admin/mpesa'
     | '/admin/orders'
     | '/admin/products'
     | '/admin/whatsapp'
@@ -219,8 +265,12 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/order/$code'
     | '/product/$slug'
+    | '/_authenticated/admin/ads'
+    | '/_authenticated/admin/branding'
     | '/_authenticated/admin/categories'
+    | '/_authenticated/admin/certificates'
     | '/_authenticated/admin/couriers'
+    | '/_authenticated/admin/mpesa'
     | '/_authenticated/admin/orders'
     | '/_authenticated/admin/products'
     | '/_authenticated/admin/whatsapp'
@@ -314,6 +364,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/ads': {
+      id: '/_authenticated/admin/ads'
+      path: '/ads'
+      fullPath: '/admin/ads'
+      preLoaderRoute: typeof AuthenticatedAdminAdsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/branding': {
+      id: '/_authenticated/admin/branding'
+      path: '/branding'
+      fullPath: '/admin/branding'
+      preLoaderRoute: typeof AuthenticatedAdminBrandingRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/categories': {
       id: '/_authenticated/admin/categories'
       path: '/categories'
@@ -321,11 +385,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCategoriesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/certificates': {
+      id: '/_authenticated/admin/certificates'
+      path: '/certificates'
+      fullPath: '/admin/certificates'
+      preLoaderRoute: typeof AuthenticatedAdminCertificatesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/couriers': {
       id: '/_authenticated/admin/couriers'
       path: '/couriers'
       fullPath: '/admin/couriers'
       preLoaderRoute: typeof AuthenticatedAdminCouriersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/mpesa': {
+      id: '/_authenticated/admin/mpesa'
+      path: '/mpesa'
+      fullPath: '/admin/mpesa'
+      preLoaderRoute: typeof AuthenticatedAdminMpesaRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/orders': {
@@ -367,8 +445,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminAdsRoute: typeof AuthenticatedAdminAdsRoute
+  AuthenticatedAdminBrandingRoute: typeof AuthenticatedAdminBrandingRoute
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
+  AuthenticatedAdminCertificatesRoute: typeof AuthenticatedAdminCertificatesRoute
   AuthenticatedAdminCouriersRoute: typeof AuthenticatedAdminCouriersRoute
+  AuthenticatedAdminMpesaRoute: typeof AuthenticatedAdminMpesaRoute
   AuthenticatedAdminOrdersRoute: typeof AuthenticatedAdminOrdersRoute
   AuthenticatedAdminProductsRoute: typeof AuthenticatedAdminProductsRoute
   AuthenticatedAdminWhatsappRoute: typeof AuthenticatedAdminWhatsappRoute
@@ -376,8 +458,12 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminAdsRoute: AuthenticatedAdminAdsRoute,
+  AuthenticatedAdminBrandingRoute: AuthenticatedAdminBrandingRoute,
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
+  AuthenticatedAdminCertificatesRoute: AuthenticatedAdminCertificatesRoute,
   AuthenticatedAdminCouriersRoute: AuthenticatedAdminCouriersRoute,
+  AuthenticatedAdminMpesaRoute: AuthenticatedAdminMpesaRoute,
   AuthenticatedAdminOrdersRoute: AuthenticatedAdminOrdersRoute,
   AuthenticatedAdminProductsRoute: AuthenticatedAdminProductsRoute,
   AuthenticatedAdminWhatsappRoute: AuthenticatedAdminWhatsappRoute,
