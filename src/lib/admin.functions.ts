@@ -21,9 +21,12 @@ export const updateOrderProgress = createServerFn({ method: "POST" })
     if (!isAdmin) throw new Error("Forbidden");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    const patch: Record<string, unknown> = { status: data.status };
-    if (data.courierId !== undefined) patch["courier_id"] = data.courierId;
-    if (data.trackingRef) patch["tracking_ref"] = data.trackingRef;
+    const patch: { status: string; courier_id?: string | null; tracking_ref?: string } = {
+      status: data.status,
+    };
+    if (data.courierId !== undefined) patch.courier_id = data.courierId;
+    if (data.trackingRef) patch.tracking_ref = data.trackingRef;
+
 
     const { data: order, error } = await supabaseAdmin
       .from("orders")
