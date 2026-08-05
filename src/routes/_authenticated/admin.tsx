@@ -61,7 +61,7 @@ function AdminLayout() {
         </div>
         <nav className="flex-1 space-y-1 px-2">
           {NAV.map((item) => {
-            const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
+            const active = "exact" in item && item.exact ? pathname === item.to : pathname.startsWith(item.to);
             return (
               <Link
                 key={item.to}
@@ -99,7 +99,7 @@ function AdminLayout() {
 
         <nav className="flex gap-2 overflow-x-auto border-b border-border px-3 py-2 md:hidden">
           {NAV.map((item) => {
-            const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
+            const active = "exact" in item && item.exact ? pathname === item.to : pathname.startsWith(item.to);
             return (
               <Link
                 key={item.to}

@@ -18,6 +18,7 @@ import { Route as TrackRouteImport } from './routes/track'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as OrderCodeRouteImport } from './routes/order.$code'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media/$'
 import { Route as ApiPublicMpesaCallbackRouteImport } from './routes/api/public/mpesa/callback'
 
@@ -65,6 +66,11 @@ const ProductSlugRoute = ProductSlugRouteImport.update({
   path: '/product/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const ApiPublicMediaSplatRoute = ApiPublicMediaSplatRouteImport.update({
   id: '/api/public/media/$',
   path: '/api/public/media/$',
@@ -82,9 +88,10 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/shop': typeof ShopRoute
   '/track': typeof TrackRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/order/$code': typeof OrderCodeRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/api/public/mpesa/callback': typeof ApiPublicMpesaCallbackRoute
 }
@@ -94,9 +101,9 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/shop': typeof ShopRoute
   '/track': typeof TrackRoute
-  '/admin': typeof AuthenticatedAdminRoute
   '/order/$code': typeof OrderCodeRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/api/public/mpesa/callback': typeof ApiPublicMpesaCallbackRoute
 }
@@ -108,9 +115,10 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/shop': typeof ShopRoute
   '/track': typeof TrackRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/order/$code': typeof OrderCodeRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/api/public/mpesa/callback': typeof ApiPublicMpesaCallbackRoute
 }
@@ -125,6 +133,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/order/$code'
     | '/product/$slug'
+    | '/admin/'
     | '/api/public/media/$'
     | '/api/public/mpesa/callback'
   fileRoutesByTo: FileRoutesByTo
@@ -134,9 +143,9 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/shop'
     | '/track'
-    | '/admin'
     | '/order/$code'
     | '/product/$slug'
+    | '/admin'
     | '/api/public/media/$'
     | '/api/public/mpesa/callback'
   id:
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/order/$code'
     | '/product/$slug'
+    | '/_authenticated/admin/'
     | '/api/public/media/$'
     | '/api/public/mpesa/callback'
   fileRoutesById: FileRoutesById
@@ -232,6 +242,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/api/public/media/$': {
       id: '/api/public/media/$'
       path: '/api/public/media/$'
@@ -249,12 +266,23 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
