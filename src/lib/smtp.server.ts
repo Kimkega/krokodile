@@ -38,10 +38,11 @@ const dec = new TextDecoder();
 
 /** Cloudflare Workers / workerd path. */
 async function edgeSocket(host: string, port: number, secure: boolean): Promise<Duplex | null> {
-  let connect: ((a: unknown, b?: unknown) => unknown) | null = null;
+  type ConnectFn = (a: unknown, b?: unknown) => unknown;
+  let connect: ConnectFn | null = null;
   try {
     const spec = "cloudflare" + ":sockets";
-    const mod = (await import(/* @vite-ignore */ spec)) as { connect?: typeof connect };
+    const mod = (await import(/* @vite-ignore */ spec)) as { connect?: ConnectFn };
     connect = mod.connect ?? null;
   } catch {
     return null;
@@ -118,7 +119,9 @@ async function nodeSocket(host: string, port: number, secure: boolean): Promise<
           );
           upgraded.on("error", reject);
         }),
-      close: async () => sock.destroy(),
+      close: async () => {
+        sock.destroy();
+      },
     };
   };
 
