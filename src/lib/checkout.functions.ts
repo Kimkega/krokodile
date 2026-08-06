@@ -159,6 +159,8 @@ export const createOrder = createServerFn({ method: "POST" })
           payment_status: push.ok ? "processing" : "failed",
         })
         .eq("id", order.id);
+      const { sendOrderEmail } = await import("./notify.server");
+      await sendOrderEmail("order_placed", order.id, origin);
       return { ok: true as const, orderCode, paymentStarted: push.ok, message: push.message };
     } catch (err) {
       const message = err instanceof Error ? err.message : "Payment could not be started";
@@ -180,42 +182,45 @@ export const getOrder = createServerFn({ method: "POST" })
     const { data: order } = await supabaseAdmin
       .from("orders")
       .select(
-        "id, order_code, customer_name, email, phone, county, sub_county, ward, town, address_notes, subtotal, shipping_fee, total, status, payment_status, payment_message, mpesa_receipt, checkout_request_id, tracking_ref, created_at, couriers(name, phone)",
+        "id, order_code, customer_name, email, phone, county, sub_county, ward, town, address_notes, subtotal, shipping_fee, total, status, payment_status, payment_message, mpesa_receipt, checkout_request_id, tracking_ref, courier_contact, delivery_note_no, created_at, couriers(name, phone)",
       )
       .eq("order_code", data.orderCode.toUpperCase())
       .maybeSingle();
     if (!order) return { ok: false as const, message: "Order not found." };
 
     // Fallback reconciliation when the Daraja callback has not arrived yet.
-    if (order.payment_status === "processing" && order.checkout_request_id) {
+    // The STK prompt lives for ~60s on the handset, so we never declare failure
+    // before the customer has had a chance to enter their PIN.
+    const ageMs = Date.now() - new Date(order.created_at as string).getTime();
+    if (order.payment_status === "processing" && order.checkout_request_id && ageMs > 12_000) {
       const cfg = await loadMpesaConfig();
       if (cfg?.enabled) {
         try {
           const q = await stkQuery(cfg, order.checkout_request_id);
+          // null  -> Daraja is still processing (HTTP 500 / 500.001.1001). Keep waiting.
+          // "0"   -> paid.
+          // 1032  -> cancelled by user, 1037 -> no response, 1 -> insufficient funds, 2001 -> wrong PIN.
+          const terminalFailure = ["1", "1032", "1037", "1001", "2001", "1019", "1025", "9999"];
           if (q.resultCode === "0") {
+            const patch = { payment_status: "paid", status: "paid", payment_message: q.description };
+            await supabaseAdmin.from("orders").update(patch).eq("id", order.id);
+            await supabaseAdmin
+              .from("order_events")
+              .insert({ order_id: order.id, status: "paid", note: q.description || "M-Pesa payment confirmed." });
+            const { sendOrderEmail } = await import("./notify.server");
+            await sendOrderEmail("payment_received", order.id);
+            Object.assign(order, patch);
+          } else if (q.resultCode && terminalFailure.includes(q.resultCode) && ageMs > 45_000) {
+            const message = q.description || "Payment was not completed.";
             await supabaseAdmin
               .from("orders")
-              .update({ payment_status: "paid", status: "paid", payment_message: q.description })
-              .eq("id", order.id);
-            order.payment_status = "paid";
-            order.status = "paid";
-            order.payment_message = q.description;
-          } else if (q.resultCode && q.resultCode !== "0" && q.resultCode !== "1032" && q.resultCode !== "1037") {
-            await supabaseAdmin
-              .from("orders")
-              .update({ payment_status: "failed", payment_message: q.description })
-              .eq("id", order.id);
-            order.payment_status = "failed";
-            order.payment_message = q.description;
-          } else if (q.resultCode === "1032" || q.resultCode === "1037") {
-            await supabaseAdmin
-              .from("orders")
-              .update({ payment_status: "failed", payment_message: q.description || "Payment cancelled." })
+              .update({ payment_status: "failed", payment_message: message })
               .eq("id", order.id);
             order.payment_status = "failed";
-            order.payment_message = q.description || "Payment cancelled.";
+            order.payment_message = message;
           }
         } catch (err) {
+          // A query error is not a payment failure — stay in "processing".
           console.error("[checkout] stk query error", err);
         }
       }
@@ -248,11 +253,94 @@ export const trackOrders = createServerFn({ method: "POST" })
     const { data: orders } = await supabaseAdmin
       .from("orders")
       .select(
-        "order_code, status, payment_status, total, created_at, tracking_ref, county, sub_county, town, couriers(name, phone)",
+        "order_code, status, payment_status, total, created_at, tracking_ref, courier_contact, county, sub_county, town, couriers(name, phone)",
       )
       .eq("email", data.email.trim().toLowerCase())
       .eq("phone", phone)
       .order("created_at", { ascending: false })
       .limit(25);
     return { ok: true as const, orders: orders ?? [] };
+  });
+
+/** Re-sends the M-Pesa STK push for an order that has not been paid yet. */
+export const retryPayment = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) =>
+    z
+      .object({
+        orderCode: z.string().trim().min(4).max(20),
+        phone: z.string().trim().max(20).optional().default(""),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { loadMpesaConfig, stkPush } = await import("./mpesa.server");
+    const { getRequest } = await import("@tanstack/react-start/server");
+
+    const { data: order } = await supabaseAdmin
+      .from("orders")
+      .select("id, order_code, phone, total, payment_status")
+      .eq("order_code", data.orderCode.toUpperCase())
+      .maybeSingle();
+    if (!order) return { ok: false as const, message: "Order not found." };
+    if (order.payment_status === "paid") return { ok: false as const, message: "This order is already paid." };
+
+    const phone = normalize(data.phone || order.phone);
+    if (!/^254(7|1)\d{8}$/.test(phone)) return { ok: false as const, message: "Enter a valid Kenyan phone number." };
+
+    const cfg = await loadMpesaConfig();
+    if (!cfg || !cfg.enabled) return { ok: false as const, message: "M-Pesa is not configured yet." };
+
+    const origin = (() => {
+      try {
+        return new URL(getRequest().url).origin;
+      } catch {
+        return "";
+      }
+    })();
+    const callbackUrl = cfg.callback_url?.trim() || `${origin}/api/public/mpesa/callback`;
+
+    try {
+      const push = await stkPush({
+        cfg,
+        phone,
+        amount: Number(order.total),
+        reference: order.order_code,
+        description: `KROKO DILE ${order.order_code}`,
+        callbackUrl,
+      });
+      await supabaseAdmin
+        .from("orders")
+        .update({
+          phone,
+          checkout_request_id: push.checkoutRequestId ?? null,
+          merchant_request_id: push.merchantRequestId ?? null,
+          payment_message: push.message,
+          payment_status: push.ok ? "processing" : "failed",
+        })
+        .eq("id", order.id);
+      await supabaseAdmin
+        .from("order_events")
+        .insert({ order_id: order.id, status: "pending", note: "Payment retried — STK push re-sent." });
+      return { ok: push.ok, message: push.message };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Payment could not be restarted";
+      return { ok: false as const, message };
+    }
+  });
+
+/** Public link that always points at the store's own domain. */
+export const getPayLink = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ orderCode: z.string().trim().min(4).max(20) }).parse(data))
+  .handler(async ({ data }) => {
+    const { publicBaseUrl } = await import("./notify.server");
+    const { getRequest } = await import("@tanstack/react-start/server");
+    let origin = "";
+    try {
+      origin = new URL(getRequest().url).origin;
+    } catch {
+      /* ignore */
+    }
+    const base = await publicBaseUrl(origin);
+    return { url: `${base}/order/${data.orderCode.toUpperCase()}` };
   });
