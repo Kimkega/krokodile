@@ -26,10 +26,11 @@ export const Route = createFileRoute("/api/public/mpesa/callback")({
 
         const { data: order } = await supabaseAdmin
           .from("orders")
-          .select("id, status")
+          .select("id, status, payment_status")
           .eq("checkout_request_id", checkoutRequestId)
           .maybeSingle();
         if (!order) return Response.json({ ResultCode: 0, ResultDesc: "Unknown order" });
+        if (order.payment_status === "paid") return Response.json({ ResultCode: 0, ResultDesc: "Already settled" });
 
         const paid = resultCode === "0";
         await supabaseAdmin
@@ -38,7 +39,7 @@ export const Route = createFileRoute("/api/public/mpesa/callback")({
             payment_status: paid ? "paid" : "failed",
             status: paid ? "paid" : order.status,
             payment_message: resultDesc,
-            mpesa_receipt: receipt ? String(receipt) : null,
+            ...(receipt ? { mpesa_receipt: String(receipt) } : {}),
           })
           .eq("id", order.id);
 
@@ -47,6 +48,16 @@ export const Route = createFileRoute("/api/public/mpesa/callback")({
           status: paid ? "paid" : "failed",
           note: resultDesc,
         });
+
+        const { sendOrderEmail } = await import("@/lib/notify.server");
+        const origin = (() => {
+          try {
+            return new URL(request.url).origin;
+          } catch {
+            return "";
+          }
+        })();
+        await sendOrderEmail(paid ? "payment_received" : "payment_failed", order.id, origin);
 
         return Response.json({ ResultCode: 0, ResultDesc: "Accepted" });
       },

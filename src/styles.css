@@ -189,6 +189,14 @@
   background-size: 18px 18px;
 }
 
+@utility croc-texture-soft {
+  background-image:
+    radial-gradient(circle at 30% 30%, oklch(1 0 0 / 0.035) 0 2px, transparent 3px),
+    radial-gradient(circle at 70% 70%, oklch(0 0 0 / 0.04) 0 2px, transparent 3px);
+  background-size: 18px 18px;
+}
+
+
 @utility tracking-luxe {
   letter-spacing: 0.28em;
   text-transform: uppercase;

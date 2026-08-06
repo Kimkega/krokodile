@@ -64,7 +64,7 @@ function Shop() {
   const navigate = Route.useNavigate();
 
   const setSearch = (patch: Partial<typeof search>) =>
-    navigate({ search: (prev: ShopSearch) => ({ ...prev, ...patch }), replace: true });
+    navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, ...patch }), replace: true });
 
   const { data: categories } = useQuery({
     queryKey: ["categories", "shop"],
@@ -140,14 +140,14 @@ function Shop() {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <Link to="/shop" search={(prev: ShopSearch) => ({ ...prev, category: undefined })} className={chip(!category)}>
+            <Link to="/shop" search={(prev: Record<string, unknown>) => ({ ...prev, category: undefined })} className={chip(!category)}>
               All
             </Link>
             {categories?.map((c) => (
               <Link
                 key={c.slug}
                 to="/shop"
-                search={(prev: ShopSearch) => ({ ...prev, category: c.slug })}
+                search={(prev: Record<string, unknown>) => ({ ...prev, category: c.slug })}
                 className={chip(category === c.slug)}
               >
                 {c.name}

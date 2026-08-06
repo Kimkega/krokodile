@@ -31,6 +31,8 @@ export function Navbar() {
     { to: "/shop", label: "All bags", search: undefined },
     ...(categories ?? []).map((c) => ({ to: "/shop", label: c.name, search: { category: c.slug } })),
     { to: "/track", label: "Track order", search: undefined },
+    { to: "/verify", label: "Verify", search: undefined },
+
   ];
 
   return (
