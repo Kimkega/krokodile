@@ -45,15 +45,6 @@ export async function publicBaseUrl(requestOrigin?: string): Promise<string> {
   return (requestOrigin ?? "").replace(/\/+$/, "");
 }
 
-export function currentOrigin(): string {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    return "";
-  } catch {
-    return "";
-  }
-}
-
 type OrderRow = {
   id: string;
   order_code: string;
