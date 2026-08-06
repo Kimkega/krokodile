@@ -124,13 +124,16 @@ export type Database = {
       }
       certificates: {
         Row: {
+          buyer_name: string | null
           code: string
           created_at: string
           id: string
           issued_to: string | null
           last_scanned_at: string | null
           notes: string | null
+          order_code: string | null
           order_id: string | null
+          paid_at: string | null
           product_id: string | null
           product_name: string | null
           scans: number
@@ -138,13 +141,16 @@ export type Database = {
           status: string
         }
         Insert: {
+          buyer_name?: string | null
           code: string
           created_at?: string
           id?: string
           issued_to?: string | null
           last_scanned_at?: string | null
           notes?: string | null
+          order_code?: string | null
           order_id?: string | null
+          paid_at?: string | null
           product_id?: string | null
           product_name?: string | null
           scans?: number
@@ -152,13 +158,16 @@ export type Database = {
           status?: string
         }
         Update: {
+          buyer_name?: string | null
           code?: string
           created_at?: string
           id?: string
           issued_to?: string | null
           last_scanned_at?: string | null
           notes?: string | null
+          order_code?: string | null
           order_id?: string | null
+          paid_at?: string | null
           product_id?: string | null
           product_name?: string | null
           scans?: number
@@ -209,6 +218,39 @@ export type Database = {
           name?: string
           notes?: string | null
           phone?: string | null
+        }
+        Relationships: []
+      }
+      email_templates: {
+        Row: {
+          body: string
+          created_at: string
+          enabled: boolean
+          id: string
+          key: string
+          label: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          key: string
+          label: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          key?: string
+          label?: string
+          subject?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -343,9 +385,11 @@ export type Database = {
           admin_notes: string | null
           checkout_request_id: string | null
           county: string | null
+          courier_contact: string | null
           courier_id: string | null
           created_at: string
           customer_name: string
+          delivery_note_no: string | null
           email: string
           id: string
           merchant_request_id: string | null
@@ -370,9 +414,11 @@ export type Database = {
           admin_notes?: string | null
           checkout_request_id?: string | null
           county?: string | null
+          courier_contact?: string | null
           courier_id?: string | null
           created_at?: string
           customer_name: string
+          delivery_note_no?: string | null
           email: string
           id?: string
           merchant_request_id?: string | null
@@ -397,9 +443,11 @@ export type Database = {
           admin_notes?: string | null
           checkout_request_id?: string | null
           county?: string | null
+          courier_contact?: string | null
           courier_id?: string | null
           created_at?: string
           customer_name?: string
+          delivery_note_no?: string | null
           email?: string
           id?: string
           merchant_request_id?: string | null
@@ -551,11 +599,13 @@ export type Database = {
         Row: {
           contact_email: string | null
           contact_phone: string | null
+          courier_contact_note: string | null
           facebook_url: string | null
           free_shipping_threshold: number
           id: string
           instagram_url: string | null
           logo_url: string | null
+          public_base_url: string | null
           site_name: string
           tagline: string | null
           tiktok_url: string | null
@@ -567,11 +617,13 @@ export type Database = {
         Insert: {
           contact_email?: string | null
           contact_phone?: string | null
+          courier_contact_note?: string | null
           facebook_url?: string | null
           free_shipping_threshold?: number
           id?: string
           instagram_url?: string | null
           logo_url?: string | null
+          public_base_url?: string | null
           site_name?: string
           tagline?: string | null
           tiktok_url?: string | null
@@ -583,11 +635,13 @@ export type Database = {
         Update: {
           contact_email?: string | null
           contact_phone?: string | null
+          courier_contact_note?: string | null
           facebook_url?: string | null
           free_shipping_threshold?: number
           id?: string
           instagram_url?: string | null
           logo_url?: string | null
+          public_base_url?: string | null
           site_name?: string
           tagline?: string | null
           tiktok_url?: string | null
@@ -595,6 +649,51 @@ export type Database = {
           whatsapp_number?: string | null
           whatsapp_template?: string | null
           x_url?: string | null
+        }
+        Relationships: []
+      }
+      smtp_config: {
+        Row: {
+          created_at: string
+          enabled: boolean
+          from_email: string | null
+          from_name: string | null
+          host: string | null
+          id: string
+          password: string | null
+          port: number
+          reply_to: string | null
+          secure: boolean
+          updated_at: string
+          username: string | null
+        }
+        Insert: {
+          created_at?: string
+          enabled?: boolean
+          from_email?: string | null
+          from_name?: string | null
+          host?: string | null
+          id?: string
+          password?: string | null
+          port?: number
+          reply_to?: string | null
+          secure?: boolean
+          updated_at?: string
+          username?: string | null
+        }
+        Update: {
+          created_at?: string
+          enabled?: boolean
+          from_email?: string | null
+          from_name?: string | null
+          host?: string | null
+          id?: string
+          password?: string | null
+          port?: number
+          reply_to?: string | null
+          secure?: boolean
+          updated_at?: string
+          username?: string | null
         }
         Relationships: []
       }
