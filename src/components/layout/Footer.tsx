@@ -25,8 +25,9 @@ export function Footer() {
                 <Link to="/track">Track an order</Link>
               </li>
               <li>
-                <Link to="/auth">Admin login</Link>
+                <Link to="/verify">Verify authenticity</Link>
               </li>
+
             </ul>
           </div>
           <div>
