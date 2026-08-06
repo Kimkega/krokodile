@@ -80,7 +80,7 @@ async function edgeSocket(host: string, port: number, secure: boolean): Promise<
   const socket = connect(
     { hostname: host, port },
     { secureTransport: secure ? "on" : "starttls", allowHalfOpen: false },
-  ) as never;
+  ) as Parameters<typeof wrap>[0];
   return wrap(socket);
 }
 
@@ -101,10 +101,10 @@ async function nodeSocket(host: string, port: number, secure: boolean): Promise<
       } else queue.push(text);
     });
     return {
-      write: async (chunk) =>
-        new Promise<void>((resolve, reject) =>
-          sock.write(chunk, (err) => (err ? reject(err) : resolve())),
-        ),
+      write: (chunk) =>
+        new Promise<void>((resolve, reject) => {
+          sock.write(chunk, (err) => (err ? reject(err) : resolve()));
+        }),
       read: () =>
         new Promise<string>((resolve) => {
           const next = queue.shift();
