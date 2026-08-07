@@ -186,11 +186,72 @@ export type MailMessage = {
   html?: string;
 };
 
+/**
+ * Nodemailer path — used whenever we run on a real Node runtime (Vercel, VPS,
+ * shared hosting). Nodemailer negotiates the SSL/TLS handshake that shared
+ * hosting mail servers expect (self-signed certs included) far better than a
+ * hand-rolled client. Returns false when nodemailer is unavailable (edge).
+ */
+async function sendWithNodemailer(cfg: SmtpConfig, message: MailMessage): Promise<boolean> {
+  const isNode =
+    typeof process !== "undefined" &&
+    Boolean((process as unknown as { versions?: { node?: string } }).versions?.node) &&
+    typeof (globalThis as { EdgeRuntime?: unknown }).EdgeRuntime === "undefined";
+  if (!isNode) return false;
+
+  try {
+    const spec = "node" + "mailer";
+    const mod = (await import(/* @vite-ignore */ spec)) as {
+      default?: { createTransport: (o: unknown) => unknown };
+      createTransport?: (o: unknown) => unknown;
+    };
+    const createTransport = mod.createTransport ?? mod.default?.createTransport;
+    if (!createTransport) return false;
+
+    const host = (cfg.host ?? "").trim();
+    const port = Number(cfg.port) || (cfg.secure ? 465 : 587);
+    const fromEmail = (cfg.from_email ?? cfg.username ?? "").trim();
+
+    const transport = createTransport({
+      host,
+      port,
+      secure: cfg.secure || port === 465,
+      requireTLS: !cfg.secure && port !== 25,
+      auth: cfg.username && cfg.password ? { user: cfg.username, pass: cfg.password } : undefined,
+      // Shared hosting frequently presents a hostname-mismatched or self-signed
+      // certificate; still encrypt, just don't refuse the handshake.
+      tls: { rejectUnauthorized: false, servername: host, minVersion: "TLSv1" },
+      connectionTimeout: 20000,
+      greetingTimeout: 20000,
+      socketTimeout: 30000,
+    }) as {
+      sendMail: (o: unknown) => Promise<unknown>;
+    };
+
+    await transport.sendMail({
+      from: cfg.from_name ? { name: cfg.from_name, address: fromEmail } : fromEmail,
+      to: message.to,
+      replyTo: cfg.reply_to || undefined,
+      subject: message.subject,
+      text: message.text,
+      html: message.html,
+    });
+    return true;
+  } catch (err) {
+    // Only swallow "module missing" — real SMTP errors must reach the caller.
+    const msg = err instanceof Error ? err.message : String(err);
+    if (/Cannot find (module|package)|not implemented|Failed to resolve/i.test(msg)) return false;
+    throw err;
+  }
+}
+
 export async function sendSmtpMail(cfg: SmtpConfig, message: MailMessage): Promise<void> {
   const host = (cfg.host ?? "").trim();
   const fromEmail = (cfg.from_email ?? cfg.username ?? "").trim();
   if (!host || !fromEmail) throw new Error("SMTP host and from address are required");
   const port = Number(cfg.port) || (cfg.secure ? 465 : 587);
+
+  if (await sendWithNodemailer(cfg, message)) return;
 
   const duplex = (await edgeSocket(host, port, cfg.secure)) ?? (await nodeSocket(host, port, cfg.secure));
   const conn = new Conn(duplex);
