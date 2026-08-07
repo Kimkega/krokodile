@@ -37,7 +37,30 @@ function AdminCertificates() {
     },
   });
 
-  const origin = typeof window === "undefined" ? "" : window.location.origin;
+  const origin = siteOrigin();
+
+  const downloadQrPng = async (code: string) => {
+    const dataUrl = await QRCode.toDataURL(verifyUrl(code), { margin: 1, width: 1024 });
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = `${code}-qr.png`;
+    a.click();
+  };
+
+  const downloadPdf = async (rows: { code: string; serial?: string | null; product_name?: string | null; issued_to?: string | null }[]) => {
+    if (!rows.length) return;
+    await downloadCertificatePdf(
+      rows.map((r) => ({
+        code: r.code,
+        serial: r.serial ?? null,
+        productName: r.product_name ?? null,
+        issuedTo: r.issued_to ?? null,
+      })),
+      { brand: "KROKO DILE", origin },
+    );
+    toast.success(rows.length === 1 ? "Card PDF downloaded" : `${rows.length} cards downloaded`);
+  };
+
 
   const generate = async () => {
     const count = Math.min(50, Math.max(1, Number(qty) || 1));
