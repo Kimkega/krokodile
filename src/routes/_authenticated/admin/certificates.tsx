@@ -112,9 +112,19 @@ function AdminCertificates() {
 
       {qrs.length > 0 && (
         <div className="space-y-3 print:space-y-0">
-          <Button variant="outline" onClick={() => window.print()} className="print:hidden">
-            <Printer className="mr-2 size-4" /> Print cards
-          </Button>
+          <div className="flex flex-wrap gap-3 print:hidden">
+            <Button variant="outline" onClick={() => window.print()}>
+              <Printer className="mr-2 size-4" /> Print cards
+            </Button>
+            <Button
+              className="bg-gold-gradient text-accent-foreground"
+              onClick={() =>
+                void downloadPdf(qrs.map((q) => ({ code: q.code, product_name: q.productName })))
+              }
+            >
+              <FileDown className="mr-2 size-4" /> Download {qrs.length} card PDF
+            </Button>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {qrs.map((q) => (
               <div key={q.code} className="rounded-sm border border-border bg-card p-5 text-center">
@@ -124,11 +134,24 @@ function AdminCertificates() {
                 <p className="font-mono text-sm">{q.code}</p>
                 {q.productName && <p className="text-xs text-muted-foreground">{q.productName}</p>}
                 <p className="mt-2 text-[9px] text-muted-foreground">Verify at {origin}/verify</p>
+                <div className="mt-3 flex justify-center gap-2 print:hidden">
+                  <Button size="sm" variant="outline" onClick={() => void downloadQrPng(q.code)}>
+                    <Download className="mr-1.5 size-3" /> QR
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => void downloadPdf([{ code: q.code, product_name: q.productName }])}
+                  >
+                    <FileDown className="mr-1.5 size-3" /> PDF
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
+
 
       <div className="overflow-x-auto rounded-sm border border-border print:hidden">
         <table className="w-full text-sm">
