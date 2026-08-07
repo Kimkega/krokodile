@@ -40,6 +40,7 @@ const NAV = [
   { to: "/admin/whatsapp", label: "WhatsApp", icon: MessageCircle },
   { to: "/admin/branding", label: "Branding", icon: Palette },
   { to: "/admin/mpesa", label: "M-Pesa", icon: Smartphone },
+  { to: "/admin/email", label: "Email / SMTP", icon: Mail },
 ] as const;
 
 function AdminLayout() {
