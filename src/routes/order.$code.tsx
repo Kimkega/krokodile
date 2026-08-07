@@ -1,11 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { CheckCircle2, Clock, MessageCircle, XCircle } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
+import { CheckCircle2, Clock, MessageCircle, RefreshCw, XCircle, Copy } from "lucide-react";
 import { SiteShell } from "@/components/layout/SiteShell";
-import { getOrder } from "@/lib/checkout.functions";
+import { getOrder, retryPayment } from "@/lib/checkout.functions";
 import { formatKes, orderStatusLabel } from "@/lib/format";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { whatsappLink } from "@/components/WhatsAppFab";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { orderUrl } from "@/lib/site-url";
 
 export const Route = createFileRoute("/order/$code")({
   head: ({ params }) => ({
@@ -22,6 +28,10 @@ export const Route = createFileRoute("/order/$code")({
 function Receipt() {
   const { code } = Route.useParams();
   const settings = useSiteSettings();
+  const qc = useQueryClient();
+  const retry = useServerFn(retryPayment);
+  const [payPhone, setPayPhone] = useState("");
+  const [retrying, setRetrying] = useState(false);
 
   const { data } = useQuery({
     queryKey: ["order", code],
@@ -31,6 +41,21 @@ function Receipt() {
       return res && "order" in res && res.order?.payment_status === "processing" ? 4000 : false;
     },
   });
+
+  const runRetry = async (currentPhone: string) => {
+    setRetrying(true);
+    try {
+      const res = await retry({ data: { orderCode: code, phone: payPhone || currentPhone } });
+      if (res.ok) toast.success("Check your phone for the M-Pesa PIN prompt.");
+      else toast.error(res.message);
+      await qc.invalidateQueries({ queryKey: ["order", code] });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not restart payment");
+    } finally {
+      setRetrying(false);
+    }
+  };
+
 
   if (!data) {
     return (
@@ -56,12 +81,16 @@ function Receipt() {
   const { order, items } = data;
   const paid = order.payment_status === "paid";
   const failed = order.payment_status === "failed";
+  const orderPhone = (order as { phone?: string | null }).phone ?? "";
+  const payLink = orderUrl(order.order_code);
 
   const wa = whatsappLink(
     settings?.whatsapp_number,
     `Hello ${settings?.site_name ?? "KROKO DILE"}!\nOrder: ${order.order_code}\nName: ${order.customer_name}\nItems:\n${items
       .map((i) => `• ${i.name} x${i.quantity} — ${formatKes(Number(i.unit_price) * i.quantity)}`)
-      .join("\n")}\nTotal: ${formatKes(Number(order.total))}\nDeliver to: ${order.town || order.ward}, ${order.sub_county}, ${order.county}\nPayment: ${order.payment_status}${order.mpesa_receipt ? ` (${order.mpesa_receipt})` : ""}`,
+      .join("\n")}\nTotal: ${formatKes(Number(order.total))}\nDeliver to: ${order.town || order.ward}, ${order.sub_county}, ${order.county}\nPayment: ${order.payment_status}${order.mpesa_receipt ? ` (${order.mpesa_receipt})` : ""}${
+      paid ? "" : `\nPayment link: ${payLink}`
+    }`,
   );
 
   return (
@@ -89,6 +118,42 @@ function Receipt() {
               <p className="text-xs text-muted-foreground">{order.payment_message}</p>
             </div>
           </div>
+
+          {!paid && (
+            <div className="border-b border-border bg-secondary/40 px-6 py-5">
+              <p className="text-[10px] tracking-luxe text-muted-foreground">Complete your payment</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Cancelled the prompt or had insufficient balance? Your order is safe — pay {formatKes(Number(order.total))}{" "}
+                whenever you're ready.
+              </p>
+              <div className="mt-3 flex gap-2">
+                <Input
+                  inputMode="tel"
+                  placeholder={orderPhone || "07XX XXX XXX"}
+                  value={payPhone}
+                  onChange={(e) => setPayPhone(e.target.value)}
+                />
+                <Button
+                  className="bg-gold-gradient text-accent-foreground"
+                  disabled={retrying}
+                  onClick={() => void runRetry(orderPhone)}
+                >
+                  <RefreshCw className={`mr-2 size-4 ${retrying ? "animate-spin" : ""}`} /> Pay now
+                </Button>
+              </div>
+              <button
+                type="button"
+                className="mt-3 flex items-center gap-1.5 text-[10px] tracking-luxe text-accent"
+                onClick={() => {
+                  void navigator.clipboard?.writeText(payLink);
+                  toast.success("Payment link copied");
+                }}
+              >
+                <Copy className="size-3" /> Copy payment link
+              </button>
+            </div>
+          )}
+
 
           <ul className="space-y-3 px-6 py-5 text-sm">
             {items.map((i, idx) => (

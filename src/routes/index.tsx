@@ -7,7 +7,7 @@ import { ProductCard, type ProductCardData } from "@/components/products/Product
 import { Hero3DCarousel } from "@/components/home/Hero3DCarousel";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { mediaUrl } from "@/lib/media";
-import logoAsset from "@/assets/kroko-logo.png.asset.json";
+import logoUrl from "@/assets/kroko-logo.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -54,7 +54,7 @@ function Home() {
     image: [...(p.product_images ?? [])].sort((a, b) => a.sort_order - b.sort_order)[0]?.url ?? null,
   }));
 
-  const logoSrc = settings?.logo_url ? mediaUrl(settings.logo_url) : logoAsset.url;
+  const logoSrc = settings?.logo_url ? mediaUrl(settings.logo_url) : logoUrl;
 
   return (
     <SiteShell>

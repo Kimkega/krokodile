@@ -15,6 +15,7 @@ type TrackedOrder = {
   total: number;
   created_at: string;
   tracking_ref: string | null;
+  courier_contact: string | null;
   county: string | null;
   sub_county: string | null;
   town: string | null;
@@ -80,29 +81,43 @@ function Track() {
         </form>
 
         <div className="mt-10 space-y-4">
-          {orders?.map((o) => (
-            <Link
-              key={o.order_code}
-              to="/order/$code"
-              params={{ code: o.order_code }}
-              className="block rounded-sm border border-border bg-card p-5 transition-colors hover:border-accent"
-            >
-              <div className="flex items-center justify-between">
-                <p className="font-display text-2xl">{o.order_code}</p>
-                <span className="text-sm text-accent">{formatKes(Number(o.total))}</span>
+          {orders?.map((o) => {
+            const paid = o.payment_status === "paid";
+            return (
+              <div key={o.order_code} className="rounded-sm border border-border bg-card p-5">
+                <Link to="/order/$code" params={{ code: o.order_code }} className="block">
+                  <div className="flex items-center justify-between">
+                    <p className="font-display text-2xl">{o.order_code}</p>
+                    <span className="text-sm text-accent">{formatKes(Number(o.total))}</span>
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {orderStatusLabel(o.status)} · {new Date(o.created_at).toLocaleDateString("en-KE")}
+                  </p>
+                  {o.couriers && (
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Courier: {o.couriers.name}
+                      {o.couriers.phone ? ` · ${o.couriers.phone}` : ""}
+                      {o.tracking_ref ? ` · Ref ${o.tracking_ref}` : ""}
+                    </p>
+                  )}
+                  {o.courier_contact && <p className="mt-1 text-xs text-muted-foreground">{o.courier_contact}</p>}
+                </Link>
+
+                {!paid && (
+                  <div className="mt-4 flex flex-wrap items-center gap-3 rounded-sm border border-destructive/40 bg-destructive/5 px-4 py-3">
+                    <p className="text-xs text-destructive">Payment not completed</p>
+                    <Button asChild size="sm" className="ml-auto bg-gold-gradient text-accent-foreground">
+                      <Link to="/order/$code" params={{ code: o.order_code }}>
+                        Retry payment
+                      </Link>
+                    </Button>
+                  </div>
+                )}
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {orderStatusLabel(o.status)} · {new Date(o.created_at).toLocaleDateString("en-KE")}
-              </p>
-              {o.couriers && (
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Courier: {o.couriers.name}
-                  {o.tracking_ref ? ` · Ref ${o.tracking_ref}` : ""}
-                </p>
-              )}
-            </Link>
-          ))}
+            );
+          })}
         </div>
+
       </div>
     </SiteShell>
   );

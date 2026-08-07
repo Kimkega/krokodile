@@ -2,11 +2,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import QRCode from "qrcode";
-import { Printer } from "lucide-react";
+import { Download, FileDown, Printer } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { downloadCertificatePdf } from "@/lib/pdf-cards";
+import { siteOrigin, verifyUrl } from "@/lib/site-url";
 
 export const Route = createFileRoute("/_authenticated/admin/certificates")({
   component: AdminCertificates,
@@ -35,7 +37,30 @@ function AdminCertificates() {
     },
   });
 
-  const origin = typeof window === "undefined" ? "" : window.location.origin;
+  const origin = siteOrigin();
+
+  const downloadQrPng = async (code: string) => {
+    const dataUrl = await QRCode.toDataURL(verifyUrl(code), { margin: 1, width: 1024 });
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = `${code}-qr.png`;
+    a.click();
+  };
+
+  const downloadPdf = async (rows: { code: string; serial?: string | null; product_name?: string | null; issued_to?: string | null }[]) => {
+    if (!rows.length) return;
+    await downloadCertificatePdf(
+      rows.map((r) => ({
+        code: r.code,
+        serial: r.serial ?? null,
+        productName: r.product_name ?? null,
+        issuedTo: r.issued_to ?? null,
+      })),
+      { brand: "KROKO DILE", origin },
+    );
+    toast.success(rows.length === 1 ? "Card PDF downloaded" : `${rows.length} cards downloaded`);
+  };
+
 
   const generate = async () => {
     const count = Math.min(50, Math.max(1, Number(qty) || 1));
@@ -87,9 +112,19 @@ function AdminCertificates() {
 
       {qrs.length > 0 && (
         <div className="space-y-3 print:space-y-0">
-          <Button variant="outline" onClick={() => window.print()} className="print:hidden">
-            <Printer className="mr-2 size-4" /> Print cards
-          </Button>
+          <div className="flex flex-wrap gap-3 print:hidden">
+            <Button variant="outline" onClick={() => window.print()}>
+              <Printer className="mr-2 size-4" /> Print cards
+            </Button>
+            <Button
+              className="bg-gold-gradient text-accent-foreground"
+              onClick={() =>
+                void downloadPdf(qrs.map((q) => ({ code: q.code, product_name: q.productName })))
+              }
+            >
+              <FileDown className="mr-2 size-4" /> Download {qrs.length} card PDF
+            </Button>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {qrs.map((q) => (
               <div key={q.code} className="rounded-sm border border-border bg-card p-5 text-center">
@@ -99,11 +134,30 @@ function AdminCertificates() {
                 <p className="font-mono text-sm">{q.code}</p>
                 {q.productName && <p className="text-xs text-muted-foreground">{q.productName}</p>}
                 <p className="mt-2 text-[9px] text-muted-foreground">Verify at {origin}/verify</p>
+                <div className="mt-3 flex justify-center gap-2 print:hidden">
+                  <Button size="sm" variant="outline" onClick={() => void downloadQrPng(q.code)}>
+                    <Download className="mr-1.5 size-3" /> QR
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => void downloadPdf([{ code: q.code, product_name: q.productName }])}
+                  >
+                    <FileDown className="mr-1.5 size-3" /> PDF
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
+
+      <div className="flex items-center justify-between print:hidden">
+        <h2 className="font-display text-2xl">Issued certificates</h2>
+        <Button variant="outline" size="sm" disabled={!certs?.length} onClick={() => void downloadPdf(certs ?? [])}>
+          <FileDown className="mr-2 size-4" /> Download all as PDF
+        </Button>
+      </div>
 
       <div className="overflow-x-auto rounded-sm border border-border print:hidden">
         <table className="w-full text-sm">
@@ -115,6 +169,7 @@ function AdminCertificates() {
               <th className="px-4 py-3">Issued to</th>
               <th className="px-4 py-3">Scans</th>
               <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3 text-right">Download</th>
             </tr>
           </thead>
           <tbody>
@@ -126,11 +181,22 @@ function AdminCertificates() {
                 <td className="px-4 py-3">{c.issued_to}</td>
                 <td className="px-4 py-3">{c.scans}</td>
                 <td className="px-4 py-3">{c.status}</td>
+                <td className="px-4 py-3">
+                  <div className="flex justify-end gap-2">
+                    <Button size="sm" variant="ghost" onClick={() => void downloadQrPng(c.code)}>
+                      <Download className="size-3.5" />
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => void downloadPdf([c])}>
+                      <FileDown className="size-3.5" />
+                    </Button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
     </div>
   );
 }

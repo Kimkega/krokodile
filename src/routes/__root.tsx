@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "@/lib/cart";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { Toaster } from "@/components/ui/sonner";
+import { InstallPrompt } from "@/components/InstallPrompt";
 
 function NotFoundComponent() {
   return (
@@ -87,6 +88,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "KROKO DILE crafts luxury bags for men and women in Kenya. Pay with M-Pesa, track delivery countrywide.",
       },
       { name: "author", content: "KROKO DILE" },
+      { name: "theme-color", content: "#2b1d12" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-title", content: "KROKO DILE" },
       { property: "og:title", content: "KROKO DILE — Luxury Leather Bags" },
       { property: "og:description", content: "Hand-finished luxury bags for men and women." },
       { property: "og:type", content: "website" },
@@ -101,6 +105,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Jost:wght@300;400;500;600&display=swap",
       },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
     ],
   }),
   shellComponent: RootShell,
@@ -132,6 +138,7 @@ function RootComponent() {
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
         <CartDrawer />
+        <InstallPrompt />
         <Toaster position="top-center" richColors />
       </CartProvider>
     </QueryClientProvider>
