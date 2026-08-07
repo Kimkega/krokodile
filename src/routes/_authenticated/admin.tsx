@@ -14,7 +14,7 @@ import {
   Truck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import logoAsset from "@/assets/kroko-logo.png.asset.json";
+import logoUrl from "@/assets/kroko-logo.png";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -54,7 +54,7 @@ function AdminLayout() {
         )}
       >
         <div className="flex items-center gap-2 px-4 py-5">
-          <img src={logoAsset.url} alt="KROKO DILE" className="size-8 shrink-0" />
+          <img src={logoUrl} alt="KROKO DILE" className="size-8 shrink-0" />
           {!collapsed && (
             <span className="font-display text-lg leading-none text-gold-gradient">KROKO DILE</span>
           )}

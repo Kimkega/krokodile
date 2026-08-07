@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/lib/cart";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { mediaUrl } from "@/lib/media";
-import logoAsset from "@/assets/kroko-logo.png.asset.json";
+import logoUrl from "@/assets/kroko-logo.png";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
@@ -48,7 +48,7 @@ export function Navbar() {
 
         <Link to="/" className="flex items-center gap-3">
           <img
-            src={settings?.logo_url ? mediaUrl(settings.logo_url) : logoAsset.url}
+            src={settings?.logo_url ? mediaUrl(settings.logo_url) : logoUrl}
             alt={`${settings?.site_name ?? "KROKO DILE"} logo`}
             className="h-11 w-11 rounded-full object-contain bg-cocoa-gradient p-1 shadow-gold"
           />
