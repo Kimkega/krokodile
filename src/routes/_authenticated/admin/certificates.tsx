@@ -2,11 +2,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import QRCode from "qrcode";
-import { Printer } from "lucide-react";
+import { Download, FileDown, Printer } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { downloadCertificatePdf } from "@/lib/pdf-cards";
+import { siteOrigin, verifyUrl } from "@/lib/site-url";
 
 export const Route = createFileRoute("/_authenticated/admin/certificates")({
   component: AdminCertificates,
