@@ -5,6 +5,7 @@ import {
   ChevronLeft,
   LayoutDashboard,
   Layers,
+  Mail,
   Megaphone,
   MessageCircle,
   Package,
