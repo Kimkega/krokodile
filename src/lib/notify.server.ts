@@ -142,11 +142,29 @@ export async function sendOrderEmail(
     };
 
     const text = renderTokens(tpl.body, values);
+    const unpaid = row.payment_status !== "paid";
+    const cta =
+      key === "payment_failed" || (key === "order_placed" && unpaid)
+        ? { label: "Complete payment", url: values["pay_url"]! }
+        : { label: "Track your order", url: values["track_url"]! };
+
     await sendSmtpMail(cfg, {
       to: row.email,
       subject: renderTokens(tpl.subject, values),
-      text,
-      html: emailHtml(values["site_name"]!, text, base),
+      text: `${text}\n\n${cta.label}: ${cta.url}`,
+      html: emailHtml(values["site_name"]!, text, base, {
+        preheader: renderTokens(tpl.subject, values),
+        title: EMAIL_TITLES[key],
+        cta,
+        meta: [
+          ["Order", row.order_code],
+          ["Total", values["total"]!],
+          ["Payment", row.payment_status.toUpperCase()],
+          ["Status", values["status"]!],
+        ],
+        supportEmail: values["support_email"]!,
+        supportPhone: values["support_phone"]!,
+      }),
     });
     return { sent: true };
   } catch (err) {
@@ -155,25 +173,111 @@ export async function sendOrderEmail(
   }
 }
 
-export function emailHtml(siteName: string, text: string, base: string) {
+const EMAIL_TITLES: Record<NotifyKey, string> = {
+  order_placed: "Order received",
+  payment_received: "Payment confirmed",
+  payment_failed: "Payment not completed",
+  order_packed: "Your order is packed",
+  courier_assigned: "Courier assigned",
+  in_transit: "On the way to you",
+  delivered: "Delivered",
+  cancelled: "Order cancelled",
+};
+
+type EmailOpts = {
+  preheader?: string;
+  title?: string;
+  cta?: { label: string; url: string } | null;
+  meta?: [string, string][];
+  supportEmail?: string;
+  supportPhone?: string;
+};
+
+const esc = (v: string) =>
+  v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+/** Responsive, brand-styled email shell. Table based so it renders everywhere. */
+export function emailHtml(siteName: string, text: string, base: string, opts: EmailOpts = {}) {
   const body = text
     .split("\n")
-    .map((line) =>
-      /^https?:\/\//.test(line.trim())
-        ? `<p style="margin:0 0 10px"><a href="${line.trim()}" style="color:#8a6a2f">${line.trim()}</a></p>`
-        : `<p style="margin:0 0 10px">${line.replace(/&/g, "&amp;").replace(/</g, "&lt;") || "&nbsp;"}</p>`,
-    )
+    .map((line) => {
+      const t = line.trim();
+      if (!t) return `<div style="height:10px;line-height:10px">&nbsp;</div>`;
+      if (/^https?:\/\//.test(t))
+        return `<p style="margin:0 0 10px;word-break:break-all"><a href="${esc(t)}" style="color:#8a6a2f">${esc(t)}</a></p>`;
+      if (/^[•\-*]\s/.test(t))
+        return `<p style="margin:0 0 6px;padding-left:10px;color:#4a3a2a">${esc(t.replace(/^[•\-*]\s/, "• "))}</p>`;
+      return `<p style="margin:0 0 10px;color:#3b2a1c">${esc(t)}</p>`;
+    })
     .join("");
-  return `<!doctype html><html><body style="margin:0;background:#f6f3ee;font-family:Helvetica,Arial,sans-serif;color:#2b1d12">
-  <table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:24px">
-    <table width="100%" style="max-width:560px;background:#ffffff;border-radius:10px;overflow:hidden">
-      <tr><td style="background:#2b1d12;padding:22px;text-align:center">
-        <span style="font-size:22px;letter-spacing:4px;color:#d8b46a">${siteName.toUpperCase()}</span>
-      </td></tr>
-      <tr><td style="padding:24px;font-size:14px;line-height:22px">${body}</td></tr>
-      <tr><td style="padding:16px;background:#f6f3ee;text-align:center;font-size:11px;color:#7a6a58">
-        ${base ? `<a href="${base}" style="color:#8a6a2f">${base}</a>` : siteName}
-      </td></tr>
-    </table>
-  </td></tr></table></body></html>`;
+
+  const meta = (opts.meta ?? []).filter(([, v]) => v);
+  const metaRows = meta.length
+    ? `<table width="100%" cellpadding="0" cellspacing="0" style="margin:18px 0;border:1px solid #ece5da;border-radius:10px;overflow:hidden">
+        ${meta
+          .map(
+            ([k, v], i) =>
+              `<tr style="background:${i % 2 ? "#ffffff" : "#faf7f2"}">
+                 <td style="padding:10px 14px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#8b7a66">${esc(k)}</td>
+                 <td align="right" style="padding:10px 14px;font-size:13px;color:#2b1d12;font-weight:600">${esc(v)}</td>
+               </tr>`,
+          )
+          .join("")}
+      </table>`
+    : "";
+
+  const cta = opts.cta?.url
+    ? `<table cellpadding="0" cellspacing="0" style="margin:6px 0 4px"><tr>
+        <td align="center" style="border-radius:999px;background:linear-gradient(135deg,#d8b46a,#a9822f)">
+          <a href="${esc(opts.cta.url)}" style="display:inline-block;padding:13px 30px;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#2b1d12;text-decoration:none;font-weight:700">${esc(opts.cta.label)}</a>
+        </td></tr></table>`
+    : "";
+
+  const support = [
+    opts.supportPhone ? `<a href="tel:${esc(opts.supportPhone)}" style="color:#8a6a2f">${esc(opts.supportPhone)}</a>` : "",
+    opts.supportEmail
+      ? `<a href="mailto:${esc(opts.supportEmail)}" style="color:#8a6a2f">${esc(opts.supportEmail)}</a>`
+      : "",
+  ]
+    .filter(Boolean)
+    .join(" &nbsp;·&nbsp; ");
+
+  return `<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>${esc(siteName)}</title>
+<style>
+  @media only screen and (max-width:600px){
+    .kd-card{width:100%!important;border-radius:0!important}
+    .kd-pad{padding:20px!important}
+    .kd-title{font-size:22px!important}
+  }
+</style></head>
+<body style="margin:0;padding:0;background:#f2ede5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#2b1d12">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0">${esc(opts.preheader ?? "")}</div>
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f2ede5"><tr><td align="center" style="padding:26px 12px">
+  <table class="kd-card" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 6px 24px rgba(43,29,18,.10)">
+    <tr><td style="background:linear-gradient(140deg,#2b1d12,#43301d);padding:26px 24px;text-align:center">
+      <div style="font-size:24px;letter-spacing:6px;color:#d8b46a;font-weight:700">${esc(siteName.toUpperCase())}</div>
+      <div style="margin-top:6px;font-size:10px;letter-spacing:3px;color:#c9b79a;text-transform:uppercase">Luxury leather · Nairobi</div>
+    </td></tr>
+    ${
+      opts.title
+        ? `<tr><td class="kd-pad" style="padding:26px 28px 0">
+             <h1 class="kd-title" style="margin:0;font-size:26px;line-height:1.2;color:#2b1d12;font-weight:600">${esc(opts.title)}</h1>
+           </td></tr>`
+        : ""
+    }
+    <tr><td class="kd-pad" style="padding:18px 28px 24px;font-size:14px;line-height:22px">
+      ${body}
+      ${metaRows}
+      ${cta}
+    </td></tr>
+    <tr><td style="padding:18px 24px;background:#faf7f2;text-align:center;font-size:11px;line-height:18px;color:#8b7a66">
+      ${support ? `${support}<br>` : ""}
+      ${base ? `<a href="${esc(base)}" style="color:#8a6a2f">${esc(base.replace(/^https?:\/\//, ""))}</a><br>` : ""}
+      © ${new Date().getFullYear()} ${esc(siteName)}. Every piece carries a numbered authenticity certificate.
+    </td></tr>
+  </table>
+</td></tr></table></body></html>`;
 }
