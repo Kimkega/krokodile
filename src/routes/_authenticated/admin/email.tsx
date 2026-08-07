@@ -94,7 +94,10 @@ function AdminEmail() {
   };
 
   const runTest = async () => {
-    if (!testTo.trim()) return toast.error("Enter an email address to test with.");
+    if (!testTo.trim()) {
+      toast.error("Enter an email address to test with.");
+      return;
+    }
     setBusy(true);
     try {
       const res = await sendTest({ data: { to: testTo.trim() } });

@@ -26,6 +26,7 @@ import { Route as AuthenticatedAdminBrandingRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin/categories'
 import { Route as AuthenticatedAdminCertificatesRouteImport } from './routes/_authenticated/admin/certificates'
 import { Route as AuthenticatedAdminCouriersRouteImport } from './routes/_authenticated/admin/couriers'
+import { Route as AuthenticatedAdminEmailRouteImport } from './routes/_authenticated/admin/email'
 import { Route as AuthenticatedAdminMpesaRouteImport } from './routes/_authenticated/admin/mpesa'
 import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenticated/admin/orders'
 import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin/products'
@@ -121,6 +122,11 @@ const AuthenticatedAdminCouriersRoute =
     path: '/couriers',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminEmailRoute = AuthenticatedAdminEmailRouteImport.update({
+  id: '/email',
+  path: '/email',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminMpesaRoute = AuthenticatedAdminMpesaRouteImport.update({
   id: '/mpesa',
   path: '/mpesa',
@@ -171,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/certificates': typeof AuthenticatedAdminCertificatesRoute
   '/admin/couriers': typeof AuthenticatedAdminCouriersRoute
+  '/admin/email': typeof AuthenticatedAdminEmailRoute
   '/admin/mpesa': typeof AuthenticatedAdminMpesaRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
@@ -194,6 +201,7 @@ export interface FileRoutesByTo {
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/certificates': typeof AuthenticatedAdminCertificatesRoute
   '/admin/couriers': typeof AuthenticatedAdminCouriersRoute
+  '/admin/email': typeof AuthenticatedAdminEmailRoute
   '/admin/mpesa': typeof AuthenticatedAdminMpesaRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
@@ -220,6 +228,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/certificates': typeof AuthenticatedAdminCertificatesRoute
   '/_authenticated/admin/couriers': typeof AuthenticatedAdminCouriersRoute
+  '/_authenticated/admin/email': typeof AuthenticatedAdminEmailRoute
   '/_authenticated/admin/mpesa': typeof AuthenticatedAdminMpesaRoute
   '/_authenticated/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRoute
@@ -246,6 +255,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/certificates'
     | '/admin/couriers'
+    | '/admin/email'
     | '/admin/mpesa'
     | '/admin/orders'
     | '/admin/products'
@@ -269,6 +279,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/certificates'
     | '/admin/couriers'
+    | '/admin/email'
     | '/admin/mpesa'
     | '/admin/orders'
     | '/admin/products'
@@ -294,6 +305,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/certificates'
     | '/_authenticated/admin/couriers'
+    | '/_authenticated/admin/email'
     | '/_authenticated/admin/mpesa'
     | '/_authenticated/admin/orders'
     | '/_authenticated/admin/products'
@@ -439,6 +451,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCouriersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/email': {
+      id: '/_authenticated/admin/email'
+      path: '/email'
+      fullPath: '/admin/email'
+      preLoaderRoute: typeof AuthenticatedAdminEmailRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/mpesa': {
       id: '/_authenticated/admin/mpesa'
       path: '/mpesa'
@@ -490,6 +509,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminCertificatesRoute: typeof AuthenticatedAdminCertificatesRoute
   AuthenticatedAdminCouriersRoute: typeof AuthenticatedAdminCouriersRoute
+  AuthenticatedAdminEmailRoute: typeof AuthenticatedAdminEmailRoute
   AuthenticatedAdminMpesaRoute: typeof AuthenticatedAdminMpesaRoute
   AuthenticatedAdminOrdersRoute: typeof AuthenticatedAdminOrdersRoute
   AuthenticatedAdminProductsRoute: typeof AuthenticatedAdminProductsRoute
@@ -503,6 +523,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
   AuthenticatedAdminCertificatesRoute: AuthenticatedAdminCertificatesRoute,
   AuthenticatedAdminCouriersRoute: AuthenticatedAdminCouriersRoute,
+  AuthenticatedAdminEmailRoute: AuthenticatedAdminEmailRoute,
   AuthenticatedAdminMpesaRoute: AuthenticatedAdminMpesaRoute,
   AuthenticatedAdminOrdersRoute: AuthenticatedAdminOrdersRoute,
   AuthenticatedAdminProductsRoute: AuthenticatedAdminProductsRoute,
