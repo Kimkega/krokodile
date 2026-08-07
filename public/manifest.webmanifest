@@ -1,0 +1,16 @@
+{
+  "name": "KROKO DILE — Luxury Leather Bags",
+  "short_name": "KROKO DILE",
+  "description": "Handcrafted luxury leather bags for men and women, delivered across Kenya.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#2b1d12",
+  "theme_color": "#2b1d12",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
