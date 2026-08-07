@@ -152,6 +152,12 @@ function AdminCertificates() {
         </div>
       )}
 
+      <div className="flex items-center justify-between print:hidden">
+        <h2 className="font-display text-2xl">Issued certificates</h2>
+        <Button variant="outline" size="sm" disabled={!certs?.length} onClick={() => void downloadPdf(certs ?? [])}>
+          <FileDown className="mr-2 size-4" /> Download all as PDF
+        </Button>
+      </div>
 
       <div className="overflow-x-auto rounded-sm border border-border print:hidden">
         <table className="w-full text-sm">
@@ -163,6 +169,7 @@ function AdminCertificates() {
               <th className="px-4 py-3">Issued to</th>
               <th className="px-4 py-3">Scans</th>
               <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3 text-right">Download</th>
             </tr>
           </thead>
           <tbody>
@@ -174,11 +181,22 @@ function AdminCertificates() {
                 <td className="px-4 py-3">{c.issued_to}</td>
                 <td className="px-4 py-3">{c.scans}</td>
                 <td className="px-4 py-3">{c.status}</td>
+                <td className="px-4 py-3">
+                  <div className="flex justify-end gap-2">
+                    <Button size="sm" variant="ghost" onClick={() => void downloadQrPng(c.code)}>
+                      <Download className="size-3.5" />
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => void downloadPdf([c])}>
+                      <FileDown className="size-3.5" />
+                    </Button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
     </div>
   );
 }
