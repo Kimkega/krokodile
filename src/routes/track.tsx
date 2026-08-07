@@ -15,6 +15,7 @@ type TrackedOrder = {
   total: number;
   created_at: string;
   tracking_ref: string | null;
+  courier_contact: string | null;
   county: string | null;
   sub_county: string | null;
   town: string | null;
