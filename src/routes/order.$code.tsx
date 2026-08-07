@@ -28,6 +28,10 @@ export const Route = createFileRoute("/order/$code")({
 function Receipt() {
   const { code } = Route.useParams();
   const settings = useSiteSettings();
+  const qc = useQueryClient();
+  const retry = useServerFn(retryPayment);
+  const [payPhone, setPayPhone] = useState("");
+  const [retrying, setRetrying] = useState(false);
 
   const { data } = useQuery({
     queryKey: ["order", code],
@@ -37,6 +41,21 @@ function Receipt() {
       return res && "order" in res && res.order?.payment_status === "processing" ? 4000 : false;
     },
   });
+
+  const runRetry = async (currentPhone: string) => {
+    setRetrying(true);
+    try {
+      const res = await retry({ data: { orderCode: code, phone: payPhone || currentPhone } });
+      if (res.ok) toast.success("Check your phone for the M-Pesa PIN prompt.");
+      else toast.error(res.message);
+      await qc.invalidateQueries({ queryKey: ["order", code] });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not restart payment");
+    } finally {
+      setRetrying(false);
+    }
+  };
+
 
   if (!data) {
     return (
