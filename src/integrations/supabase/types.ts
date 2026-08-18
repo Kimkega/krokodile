@@ -124,9 +124,13 @@ export type Database = {
       }
       certificates: {
         Row: {
+          assigned_at: string | null
           buyer_name: string | null
           code: string
           created_at: string
+          customer_email: string | null
+          customer_phone: string | null
+          delivery_address: string | null
           id: string
           issued_to: string | null
           last_scanned_at: string | null
@@ -141,9 +145,13 @@ export type Database = {
           status: string
         }
         Insert: {
+          assigned_at?: string | null
           buyer_name?: string | null
           code: string
           created_at?: string
+          customer_email?: string | null
+          customer_phone?: string | null
+          delivery_address?: string | null
           id?: string
           issued_to?: string | null
           last_scanned_at?: string | null
@@ -158,9 +166,13 @@ export type Database = {
           status?: string
         }
         Update: {
+          assigned_at?: string | null
           buyer_name?: string | null
           code?: string
           created_at?: string
+          customer_email?: string | null
+          customer_phone?: string | null
+          delivery_address?: string | null
           id?: string
           issued_to?: string | null
           last_scanned_at?: string | null
@@ -723,6 +735,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      gen_certificate_code: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
