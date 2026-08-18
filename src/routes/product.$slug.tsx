@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart";
 import { formatKes } from "@/lib/format";
 import { mediaUrl } from "@/lib/media";
+import { SmartImage } from "@/components/products/SmartImage";
+
 
 export const Route = createFileRoute("/product/$slug")({
   head: ({ params }) => ({
@@ -75,13 +77,8 @@ function ProductPage() {
 
         <div className="mt-6 grid gap-12 md:grid-cols-2">
           <div>
-            <div className="aspect-4/5 overflow-hidden rounded-sm bg-secondary">
-              {hero ? (
-                <img src={mediaUrl(hero)} alt={product.name} className="size-full object-cover" />
-              ) : (
-                <div className="croc-texture size-full bg-cocoa-gradient" />
-              )}
-            </div>
+            <SmartImage path={hero} alt={product.name} eager />
+
             {images.length > 1 && (
               <div className="mt-3 flex gap-3">
                 {images.map((img, i) => (

@@ -209,6 +209,8 @@ export const getOrder = createServerFn({ method: "POST" })
               .insert({ order_id: order.id, status: "paid", note: q.description || "M-Pesa payment confirmed." });
             const { sendOrderEmail } = await import("./notify.server");
             await sendOrderEmail("payment_received", order.id);
+            const { assignCertificatesToOrder } = await import("./certificates.server");
+            await assignCertificatesToOrder(order.id);
             Object.assign(order, patch);
           } else if (q.resultCode && terminalFailure.includes(q.resultCode) && ageMs > 45_000) {
             const message = q.description || "Payment was not completed.";
@@ -237,8 +239,25 @@ export const getOrder = createServerFn({ method: "POST" })
       .eq("order_id", order.id)
       .order("created_at", { ascending: true });
 
+    if (order.payment_status === "paid") {
+      const { assignCertificatesToOrder } = await import("./certificates.server");
+      await assignCertificatesToOrder(order.id);
+    }
+
+    const { data: certificates } = await supabaseAdmin
+      .from("certificates")
+      .select("code, serial, product_name, issued_to, buyer_name, paid_at, status")
+      .eq("order_id", order.id)
+      .order("created_at", { ascending: true });
+
     const { id: _id, ...safeOrder } = order;
-    return { ok: true as const, order: safeOrder, items: items ?? [], events: events ?? [] };
+    return {
+      ok: true as const,
+      order: safeOrder,
+      items: items ?? [],
+      events: events ?? [],
+      certificates: certificates ?? [],
+    };
   });
 
 export const trackOrders = createServerFn({ method: "POST" })
@@ -253,13 +272,41 @@ export const trackOrders = createServerFn({ method: "POST" })
     const { data: orders } = await supabaseAdmin
       .from("orders")
       .select(
-        "order_code, status, payment_status, total, created_at, tracking_ref, courier_contact, county, sub_county, town, couriers(name, phone)",
+        "id, order_code, status, payment_status, payment_message, total, created_at, tracking_ref, courier_contact, county, sub_county, town, couriers(name, phone)",
       )
       .eq("email", data.email.trim().toLowerCase())
       .eq("phone", phone)
       .order("created_at", { ascending: false })
       .limit(25);
-    return { ok: true as const, orders: orders ?? [] };
+
+    const rows = orders ?? [];
+    const ids = rows.map((o) => o.id);
+    const { data: events } = ids.length
+      ? await supabaseAdmin
+          .from("order_events")
+          .select("order_id, status, note, created_at")
+          .in("order_id", ids)
+          .order("created_at", { ascending: true })
+      : { data: [] as { order_id: string; status: string; note: string | null; created_at: string }[] };
+    const { data: certificates } = ids.length
+      ? await supabaseAdmin
+          .from("certificates")
+          .select("order_id, code, product_name")
+          .in("order_id", ids)
+      : { data: [] as { order_id: string; code: string; product_name: string | null }[] };
+
+    return {
+      ok: true as const,
+      orders: rows.map(({ id, ...rest }) => ({
+        ...rest,
+        events: (events ?? [])
+          .filter((e) => e.order_id === id)
+          .map((e) => ({ status: e.status, note: e.note, created_at: e.created_at })),
+        certificates: (certificates ?? [])
+          .filter((c) => c.order_id === id)
+          .map((c) => ({ code: c.code, product_name: c.product_name })),
+      })),
+    };
   });
 
 /** Re-sends the M-Pesa STK push for an order that has not been paid yet. */
