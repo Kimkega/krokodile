@@ -22,23 +22,15 @@ export function ProductCard({ product }: { product: ProductCardData }) {
   return (
     <article className="group relative">
       <Link to="/product/$slug" params={{ slug: product.slug }} className="block">
-        <div className="relative aspect-4/5 overflow-hidden rounded-sm bg-secondary">
-          {image ? (
-            <img
-              src={mediaUrl(image)}
-              alt={product.name}
-              loading="lazy"
-              className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-          ) : (
-            <div className="croc-texture size-full bg-cocoa-gradient" />
-          )}
+        <div className="relative">
+          <SmartImage path={image} alt={product.name} />
           {product.compare_at_price && Number(product.compare_at_price) > Number(product.price) && (
             <span className="absolute left-3 top-3 rounded-full bg-gold-gradient px-3 py-1 text-[9px] tracking-luxe text-accent-foreground">
               Offer
             </span>
           )}
         </div>
+
         <div className="mt-4 space-y-1">
           <p className="text-[9px] tracking-luxe text-muted-foreground">{product.material ?? "Leather"}</p>
           <h3 className="font-display text-xl leading-tight">{product.name}</h3>
