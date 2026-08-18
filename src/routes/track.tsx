@@ -20,7 +20,10 @@ type TrackedOrder = {
   sub_county: string | null;
   town: string | null;
   couriers: { name: string; phone: string | null } | null;
+  events: { status: string; note: string | null; created_at: string }[];
+  certificates: { code: string; product_name: string | null }[];
 };
+
 
 export const Route = createFileRoute("/track")({
   head: () => ({
