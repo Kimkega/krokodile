@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { formatKes } from "@/lib/format";
-import { mediaUrl } from "@/lib/media";
+import { SmartImage } from "@/components/products/SmartImage";
 import { toast } from "sonner";
 
 export type ProductCardData = {
