@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart";
 import { formatKes } from "@/lib/format";
 import { mediaUrl } from "@/lib/media";
+import { SmartImage } from "@/components/products/SmartImage";
+
 
 export const Route = createFileRoute("/product/$slug")({
   head: ({ params }) => ({
