@@ -141,6 +141,14 @@ export const getDeliveryNotes = createServerFn({ method: "POST" })
         rows.map((o) => o.id),
       );
 
+    const { data: certificates } = await supabaseAdmin
+      .from("certificates")
+      .select("order_id, code, product_name")
+      .in(
+        "order_id",
+        rows.map((o) => o.id),
+      );
+
     return {
       ok: true as const,
       settings: settings ?? null,
@@ -149,6 +157,9 @@ export const getDeliveryNotes = createServerFn({ method: "POST" })
         items: (items ?? [])
           .filter((i) => i.order_id === id)
           .map((i) => ({ name: i.name, quantity: i.quantity, unit_price: Number(i.unit_price) })),
+        certificates: (certificates ?? [])
+          .filter((c) => c.order_id === id)
+          .map((c) => ({ code: c.code, product_name: c.product_name })),
       })),
     };
   });

@@ -49,6 +49,11 @@ export const Route = createFileRoute("/api/public/mpesa/callback")({
           note: resultDesc,
         });
 
+        if (paid) {
+          const { assignCertificatesToOrder } = await import("@/lib/certificates.server");
+          await assignCertificatesToOrder(order.id);
+        }
+
         const { sendOrderEmail } = await import("@/lib/notify.server");
         const origin = (() => {
           try {
