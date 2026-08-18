@@ -106,6 +106,34 @@ function Track() {
                   {o.courier_contact && <p className="mt-1 text-xs text-muted-foreground">{o.courier_contact}</p>}
                 </Link>
 
+                {o.events?.length > 0 && (
+                  <ol className="mt-4 border-l border-border pl-4">
+                    {o.events.map((ev, i) => (
+                      <li key={`${ev.created_at}-${i}`} className="relative pb-3 last:pb-0">
+                        <span className="absolute -left-[21px] top-1.5 size-2 rounded-full bg-accent" />
+                        <p className="text-xs">{orderStatusLabel(ev.status)}</p>
+                        <p className="text-[10px] text-muted-foreground">
+                          {new Date(ev.created_at).toLocaleString("en-KE")}
+                          {ev.note ? ` · ${ev.note}` : ""}
+                        </p>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+
+                {o.certificates?.length > 0 && (
+                  <p className="mt-3 text-[10px] tracking-luxe text-muted-foreground">
+                    Authenticity:{" "}
+                    {o.certificates.map((c) => (
+                      <a key={c.code} href={`/verify?code=${c.code}`} className="mr-2 font-mono text-accent">
+                        {c.code}
+                      </a>
+                    ))}
+                  </p>
+                )}
+
+
+
                 {!paid && (
                   <div className="mt-4 flex flex-wrap items-center gap-3 rounded-sm border border-destructive/40 bg-destructive/5 px-4 py-3">
                     <p className="text-xs text-destructive">Payment not completed</p>
