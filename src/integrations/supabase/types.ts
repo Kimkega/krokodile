@@ -520,13 +520,6 @@ export type Database = {
             referencedRelation: "couriers"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "orders_courier_id_fkey"
-            columns: ["courier_id"]
-            isOneToOne: false
-            referencedRelation: "couriers_public"
-            referencedColumns: ["id"]
-          },
         ]
       }
       product_images: {
@@ -877,60 +870,7 @@ export type Database = {
       }
     }
     Views: {
-      ads_public: {
-        Row: {
-          body: string | null
-          ends_at: string | null
-          id: string | null
-          image_url: string | null
-          placement: string | null
-          starts_at: string | null
-          target_url: string | null
-          title: string | null
-        }
-        Insert: {
-          body?: string | null
-          ends_at?: string | null
-          id?: string | null
-          image_url?: string | null
-          placement?: string | null
-          starts_at?: string | null
-          target_url?: string | null
-          title?: string | null
-        }
-        Update: {
-          body?: string | null
-          ends_at?: string | null
-          id?: string | null
-          image_url?: string | null
-          placement?: string | null
-          starts_at?: string | null
-          target_url?: string | null
-          title?: string | null
-        }
-        Relationships: []
-      }
-      couriers_public: {
-        Row: {
-          active: boolean | null
-          id: string | null
-          kind: string | null
-          name: string | null
-        }
-        Insert: {
-          active?: boolean | null
-          id?: string | null
-          kind?: string | null
-          name?: string | null
-        }
-        Update: {
-          active?: boolean | null
-          id?: string | null
-          kind?: string | null
-          name?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       gen_certificate_code: { Args: never; Returns: string }
