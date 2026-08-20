@@ -15,6 +15,7 @@ import { Route as AdvertiseRouteImport } from './routes/advertise'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TrackRouteImport } from './routes/track'
 import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as AuthenticatedKingdanstoreRouteImport } from './routes/_authenticated/kingdanstore'
@@ -61,6 +62,11 @@ const CheckoutRoute = CheckoutRouteImport.update({
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TrackRoute = TrackRouteImport.update({
@@ -172,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/track': typeof TrackRoute
   '/verify': typeof VerifyRoute
   '/kingdanstore': typeof AuthenticatedKingdanstoreRouteWithChildren
@@ -197,6 +204,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/track': typeof TrackRoute
   '/verify': typeof VerifyRoute
   '/order/$code': typeof OrderCodeRoute
@@ -223,6 +231,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/track': typeof TrackRoute
   '/verify': typeof VerifyRoute
   '/_authenticated/kingdanstore': typeof AuthenticatedKingdanstoreRouteWithChildren
@@ -250,6 +259,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/checkout'
     | '/shop'
+    | '/sitemap.xml'
     | '/track'
     | '/verify'
     | '/kingdanstore'
@@ -275,6 +285,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/checkout'
     | '/shop'
+    | '/sitemap.xml'
     | '/track'
     | '/verify'
     | '/order/$code'
@@ -300,6 +311,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/checkout'
     | '/shop'
+    | '/sitemap.xml'
     | '/track'
     | '/verify'
     | '/_authenticated/kingdanstore'
@@ -327,6 +339,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CheckoutRoute: typeof CheckoutRoute
   ShopRoute: typeof ShopRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TrackRoute: typeof TrackRoute
   VerifyRoute: typeof VerifyRoute
   OrderCodeRoute: typeof OrderCodeRoute
@@ -377,6 +390,13 @@ declare module '@tanstack/react-router' {
       path: '/shop'
       fullPath: '/shop'
       preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/track': {
@@ -566,6 +586,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CheckoutRoute: CheckoutRoute,
   ShopRoute: ShopRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TrackRoute: TrackRoute,
   VerifyRoute: VerifyRoute,
   OrderCodeRoute: OrderCodeRoute,
