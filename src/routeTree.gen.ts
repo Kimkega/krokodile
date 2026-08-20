@@ -17,6 +17,7 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TrackRouteImport } from './routes/track'
 import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as AuthenticatedKingdanstoreRouteImport } from './routes/_authenticated/kingdanstore'
@@ -73,6 +74,11 @@ const ShopRoute = ShopRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TrackRoute = TrackRouteImport.update({
@@ -186,6 +192,7 @@ export interface FileRoutesByFullPath {
   '/robots.txt': typeof RobotsDottxtRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/track': typeof TrackRoute
   '/verify': typeof VerifyRoute
   '/kingdanstore': typeof AuthenticatedKingdanstoreRouteWithChildren
@@ -213,6 +220,7 @@ export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/track': typeof TrackRoute
   '/verify': typeof VerifyRoute
   '/order/$code': typeof OrderCodeRoute
@@ -241,6 +249,7 @@ export interface FileRoutesById {
   '/robots.txt': typeof RobotsDottxtRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/track': typeof TrackRoute
   '/verify': typeof VerifyRoute
   '/_authenticated/kingdanstore': typeof AuthenticatedKingdanstoreRouteWithChildren
@@ -270,6 +279,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/shop'
     | '/sitemap.xml'
+    | '/terms'
     | '/track'
     | '/verify'
     | '/kingdanstore'
@@ -297,6 +307,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/shop'
     | '/sitemap.xml'
+    | '/terms'
     | '/track'
     | '/verify'
     | '/order/$code'
@@ -324,6 +335,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/shop'
     | '/sitemap.xml'
+    | '/terms'
     | '/track'
     | '/verify'
     | '/_authenticated/kingdanstore'
@@ -353,6 +365,7 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   ShopRoute: typeof ShopRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TermsRoute: typeof TermsRoute
   TrackRoute: typeof TrackRoute
   VerifyRoute: typeof VerifyRoute
   OrderCodeRoute: typeof OrderCodeRoute
@@ -417,6 +430,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/track': {
@@ -608,6 +628,7 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   ShopRoute: ShopRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TermsRoute: TermsRoute,
   TrackRoute: TrackRoute,
   VerifyRoute: VerifyRoute,
   OrderCodeRoute: OrderCodeRoute,
