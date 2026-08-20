@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AdvertiseRouteImport } from './routes/advertise'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TrackRouteImport } from './routes/track'
@@ -57,6 +58,11 @@ const AuthRoute = AuthRouteImport.update({
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShopRoute = ShopRouteImport.update({
@@ -177,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/advertise': typeof AdvertiseRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/track': typeof TrackRoute
@@ -203,6 +210,7 @@ export interface FileRoutesByTo {
   '/advertise': typeof AdvertiseRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/track': typeof TrackRoute
@@ -230,6 +238,7 @@ export interface FileRoutesById {
   '/advertise': typeof AdvertiseRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/track': typeof TrackRoute
@@ -258,6 +267,7 @@ export interface FileRouteTypes {
     | '/advertise'
     | '/auth'
     | '/checkout'
+    | '/robots.txt'
     | '/shop'
     | '/sitemap.xml'
     | '/track'
@@ -284,6 +294,7 @@ export interface FileRouteTypes {
     | '/advertise'
     | '/auth'
     | '/checkout'
+    | '/robots.txt'
     | '/shop'
     | '/sitemap.xml'
     | '/track'
@@ -310,6 +321,7 @@ export interface FileRouteTypes {
     | '/advertise'
     | '/auth'
     | '/checkout'
+    | '/robots.txt'
     | '/shop'
     | '/sitemap.xml'
     | '/track'
@@ -338,6 +350,7 @@ export interface RootRouteChildren {
   AdvertiseRoute: typeof AdvertiseRoute
   AuthRoute: typeof AuthRoute
   CheckoutRoute: typeof CheckoutRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   ShopRoute: typeof ShopRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TrackRoute: typeof TrackRoute
@@ -383,6 +396,13 @@ declare module '@tanstack/react-router' {
       path: '/checkout'
       fullPath: '/checkout'
       preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shop': {
@@ -585,6 +605,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdvertiseRoute: AdvertiseRoute,
   AuthRoute: AuthRoute,
   CheckoutRoute: CheckoutRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   ShopRoute: ShopRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TrackRoute: TrackRoute,
