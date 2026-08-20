@@ -4,7 +4,7 @@ import { AlertTriangle, Megaphone, Package, Receipt, Wallet } from "lucide-react
 import { supabase } from "@/integrations/supabase/client";
 import { formatKes, orderStatusLabel } from "@/lib/format";
 
-export const Route = createFileRoute("/_authenticated/admin/")({
+export const Route = createFileRoute("/_authenticated/kingdanstore/")({
   component: Overview,
 });
 
@@ -73,7 +73,7 @@ function Overview() {
               </li>
             ))}
           </ul>
-          <Link to="/admin/products" className="mt-3 inline-block text-[10px] tracking-luxe text-accent">
+          <Link to="/kingdanstore/products" className="mt-3 inline-block text-[10px] tracking-luxe text-accent">
             Restock now
           </Link>
         </div>

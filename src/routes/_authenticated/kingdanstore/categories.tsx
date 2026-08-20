@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 
-export const Route = createFileRoute("/_authenticated/admin/categories")({
+export const Route = createFileRoute("/_authenticated/kingdanstore/categories")({
   component: AdminCategories,
 });
 

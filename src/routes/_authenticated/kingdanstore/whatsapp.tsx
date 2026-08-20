@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-export const Route = createFileRoute("/_authenticated/admin/whatsapp")({
+export const Route = createFileRoute("/_authenticated/kingdanstore/whatsapp")({
   component: AdminWhatsApp,
 });
 

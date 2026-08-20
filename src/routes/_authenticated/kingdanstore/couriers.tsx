@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export const Route = createFileRoute("/_authenticated/admin/couriers")({
+export const Route = createFileRoute("/_authenticated/kingdanstore/couriers")({
   component: AdminCouriers,
 });
 

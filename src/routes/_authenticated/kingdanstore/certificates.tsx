@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { downloadCertificatePdf } from "@/lib/pdf-cards";
 import { siteOrigin, verifyUrl } from "@/lib/site-url";
 
-export const Route = createFileRoute("/_authenticated/admin/certificates")({
+export const Route = createFileRoute("/_authenticated/kingdanstore/certificates")({
   component: AdminCertificates,
 });
 

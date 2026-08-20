@@ -17,20 +17,20 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as TrackRouteImport } from './routes/track'
 import { Route as VerifyRouteImport } from './routes/verify'
-import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedKingdanstoreRouteImport } from './routes/_authenticated/kingdanstore'
 import { Route as OrderCodeRouteImport } from './routes/order.$code'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
-import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
-import { Route as AuthenticatedAdminAdsRouteImport } from './routes/_authenticated/admin/ads'
-import { Route as AuthenticatedAdminBrandingRouteImport } from './routes/_authenticated/admin/branding'
-import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin/categories'
-import { Route as AuthenticatedAdminCertificatesRouteImport } from './routes/_authenticated/admin/certificates'
-import { Route as AuthenticatedAdminCouriersRouteImport } from './routes/_authenticated/admin/couriers'
-import { Route as AuthenticatedAdminEmailRouteImport } from './routes/_authenticated/admin/email'
-import { Route as AuthenticatedAdminMpesaRouteImport } from './routes/_authenticated/admin/mpesa'
-import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenticated/admin/orders'
-import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin/products'
-import { Route as AuthenticatedAdminWhatsappRouteImport } from './routes/_authenticated/admin/whatsapp'
+import { Route as AuthenticatedKingdanstoreIndexRouteImport } from './routes/_authenticated/kingdanstore/index'
+import { Route as AuthenticatedKingdanstoreAdsRouteImport } from './routes/_authenticated/kingdanstore/ads'
+import { Route as AuthenticatedKingdanstoreBrandingRouteImport } from './routes/_authenticated/kingdanstore/branding'
+import { Route as AuthenticatedKingdanstoreCategoriesRouteImport } from './routes/_authenticated/kingdanstore/categories'
+import { Route as AuthenticatedKingdanstoreCertificatesRouteImport } from './routes/_authenticated/kingdanstore/certificates'
+import { Route as AuthenticatedKingdanstoreCouriersRouteImport } from './routes/_authenticated/kingdanstore/couriers'
+import { Route as AuthenticatedKingdanstoreEmailRouteImport } from './routes/_authenticated/kingdanstore/email'
+import { Route as AuthenticatedKingdanstoreMpesaRouteImport } from './routes/_authenticated/kingdanstore/mpesa'
+import { Route as AuthenticatedKingdanstoreOrdersRouteImport } from './routes/_authenticated/kingdanstore/orders'
+import { Route as AuthenticatedKingdanstoreProductsRouteImport } from './routes/_authenticated/kingdanstore/products'
+import { Route as AuthenticatedKingdanstoreWhatsappRouteImport } from './routes/_authenticated/kingdanstore/whatsapp'
 import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media/$'
 import { Route as ApiPublicMpesaCallbackRouteImport } from './routes/api/public/mpesa/callback'
 
@@ -73,11 +73,12 @@ const VerifyRoute = VerifyRouteImport.update({
   path: '/verify',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
+const AuthenticatedKingdanstoreRoute =
+  AuthenticatedKingdanstoreRouteImport.update({
+    id: '/kingdanstore',
+    path: '/kingdanstore',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const OrderCodeRoute = OrderCodeRouteImport.update({
   id: '/order/$code',
   path: '/order/$code',
@@ -88,67 +89,71 @@ const ProductSlugRoute = ProductSlugRouteImport.update({
   path: '/product/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthenticatedAdminRoute,
-} as any)
-const AuthenticatedAdminAdsRoute = AuthenticatedAdminAdsRouteImport.update({
-  id: '/ads',
-  path: '/ads',
-  getParentRoute: () => AuthenticatedAdminRoute,
-} as any)
-const AuthenticatedAdminBrandingRoute =
-  AuthenticatedAdminBrandingRouteImport.update({
+const AuthenticatedKingdanstoreIndexRoute =
+  AuthenticatedKingdanstoreIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedKingdanstoreRoute,
+  } as any)
+const AuthenticatedKingdanstoreAdsRoute =
+  AuthenticatedKingdanstoreAdsRouteImport.update({
+    id: '/ads',
+    path: '/ads',
+    getParentRoute: () => AuthenticatedKingdanstoreRoute,
+  } as any)
+const AuthenticatedKingdanstoreBrandingRoute =
+  AuthenticatedKingdanstoreBrandingRouteImport.update({
     id: '/branding',
     path: '/branding',
-    getParentRoute: () => AuthenticatedAdminRoute,
+    getParentRoute: () => AuthenticatedKingdanstoreRoute,
   } as any)
-const AuthenticatedAdminCategoriesRoute =
-  AuthenticatedAdminCategoriesRouteImport.update({
+const AuthenticatedKingdanstoreCategoriesRoute =
+  AuthenticatedKingdanstoreCategoriesRouteImport.update({
     id: '/categories',
     path: '/categories',
-    getParentRoute: () => AuthenticatedAdminRoute,
+    getParentRoute: () => AuthenticatedKingdanstoreRoute,
   } as any)
-const AuthenticatedAdminCertificatesRoute =
-  AuthenticatedAdminCertificatesRouteImport.update({
+const AuthenticatedKingdanstoreCertificatesRoute =
+  AuthenticatedKingdanstoreCertificatesRouteImport.update({
     id: '/certificates',
     path: '/certificates',
-    getParentRoute: () => AuthenticatedAdminRoute,
+    getParentRoute: () => AuthenticatedKingdanstoreRoute,
   } as any)
-const AuthenticatedAdminCouriersRoute =
-  AuthenticatedAdminCouriersRouteImport.update({
+const AuthenticatedKingdanstoreCouriersRoute =
+  AuthenticatedKingdanstoreCouriersRouteImport.update({
     id: '/couriers',
     path: '/couriers',
-    getParentRoute: () => AuthenticatedAdminRoute,
+    getParentRoute: () => AuthenticatedKingdanstoreRoute,
   } as any)
-const AuthenticatedAdminEmailRoute = AuthenticatedAdminEmailRouteImport.update({
-  id: '/email',
-  path: '/email',
-  getParentRoute: () => AuthenticatedAdminRoute,
-} as any)
-const AuthenticatedAdminMpesaRoute = AuthenticatedAdminMpesaRouteImport.update({
-  id: '/mpesa',
-  path: '/mpesa',
-  getParentRoute: () => AuthenticatedAdminRoute,
-} as any)
-const AuthenticatedAdminOrdersRoute =
-  AuthenticatedAdminOrdersRouteImport.update({
+const AuthenticatedKingdanstoreEmailRoute =
+  AuthenticatedKingdanstoreEmailRouteImport.update({
+    id: '/email',
+    path: '/email',
+    getParentRoute: () => AuthenticatedKingdanstoreRoute,
+  } as any)
+const AuthenticatedKingdanstoreMpesaRoute =
+  AuthenticatedKingdanstoreMpesaRouteImport.update({
+    id: '/mpesa',
+    path: '/mpesa',
+    getParentRoute: () => AuthenticatedKingdanstoreRoute,
+  } as any)
+const AuthenticatedKingdanstoreOrdersRoute =
+  AuthenticatedKingdanstoreOrdersRouteImport.update({
     id: '/orders',
     path: '/orders',
-    getParentRoute: () => AuthenticatedAdminRoute,
+    getParentRoute: () => AuthenticatedKingdanstoreRoute,
   } as any)
-const AuthenticatedAdminProductsRoute =
-  AuthenticatedAdminProductsRouteImport.update({
+const AuthenticatedKingdanstoreProductsRoute =
+  AuthenticatedKingdanstoreProductsRouteImport.update({
     id: '/products',
     path: '/products',
-    getParentRoute: () => AuthenticatedAdminRoute,
+    getParentRoute: () => AuthenticatedKingdanstoreRoute,
   } as any)
-const AuthenticatedAdminWhatsappRoute =
-  AuthenticatedAdminWhatsappRouteImport.update({
+const AuthenticatedKingdanstoreWhatsappRoute =
+  AuthenticatedKingdanstoreWhatsappRouteImport.update({
     id: '/whatsapp',
     path: '/whatsapp',
-    getParentRoute: () => AuthenticatedAdminRoute,
+    getParentRoute: () => AuthenticatedKingdanstoreRoute,
   } as any)
 const ApiPublicMediaSplatRoute = ApiPublicMediaSplatRouteImport.update({
   id: '/api/public/media/$',
@@ -169,20 +174,20 @@ export interface FileRoutesByFullPath {
   '/shop': typeof ShopRoute
   '/track': typeof TrackRoute
   '/verify': typeof VerifyRoute
-  '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/kingdanstore': typeof AuthenticatedKingdanstoreRouteWithChildren
   '/order/$code': typeof OrderCodeRoute
   '/product/$slug': typeof ProductSlugRoute
-  '/admin/ads': typeof AuthenticatedAdminAdsRoute
-  '/admin/branding': typeof AuthenticatedAdminBrandingRoute
-  '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
-  '/admin/certificates': typeof AuthenticatedAdminCertificatesRoute
-  '/admin/couriers': typeof AuthenticatedAdminCouriersRoute
-  '/admin/email': typeof AuthenticatedAdminEmailRoute
-  '/admin/mpesa': typeof AuthenticatedAdminMpesaRoute
-  '/admin/orders': typeof AuthenticatedAdminOrdersRoute
-  '/admin/products': typeof AuthenticatedAdminProductsRoute
-  '/admin/whatsapp': typeof AuthenticatedAdminWhatsappRoute
-  '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/kingdanstore/ads': typeof AuthenticatedKingdanstoreAdsRoute
+  '/kingdanstore/branding': typeof AuthenticatedKingdanstoreBrandingRoute
+  '/kingdanstore/categories': typeof AuthenticatedKingdanstoreCategoriesRoute
+  '/kingdanstore/certificates': typeof AuthenticatedKingdanstoreCertificatesRoute
+  '/kingdanstore/couriers': typeof AuthenticatedKingdanstoreCouriersRoute
+  '/kingdanstore/email': typeof AuthenticatedKingdanstoreEmailRoute
+  '/kingdanstore/mpesa': typeof AuthenticatedKingdanstoreMpesaRoute
+  '/kingdanstore/orders': typeof AuthenticatedKingdanstoreOrdersRoute
+  '/kingdanstore/products': typeof AuthenticatedKingdanstoreProductsRoute
+  '/kingdanstore/whatsapp': typeof AuthenticatedKingdanstoreWhatsappRoute
+  '/kingdanstore/': typeof AuthenticatedKingdanstoreIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/api/public/mpesa/callback': typeof ApiPublicMpesaCallbackRoute
 }
@@ -196,17 +201,17 @@ export interface FileRoutesByTo {
   '/verify': typeof VerifyRoute
   '/order/$code': typeof OrderCodeRoute
   '/product/$slug': typeof ProductSlugRoute
-  '/admin/ads': typeof AuthenticatedAdminAdsRoute
-  '/admin/branding': typeof AuthenticatedAdminBrandingRoute
-  '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
-  '/admin/certificates': typeof AuthenticatedAdminCertificatesRoute
-  '/admin/couriers': typeof AuthenticatedAdminCouriersRoute
-  '/admin/email': typeof AuthenticatedAdminEmailRoute
-  '/admin/mpesa': typeof AuthenticatedAdminMpesaRoute
-  '/admin/orders': typeof AuthenticatedAdminOrdersRoute
-  '/admin/products': typeof AuthenticatedAdminProductsRoute
-  '/admin/whatsapp': typeof AuthenticatedAdminWhatsappRoute
-  '/admin': typeof AuthenticatedAdminIndexRoute
+  '/kingdanstore/ads': typeof AuthenticatedKingdanstoreAdsRoute
+  '/kingdanstore/branding': typeof AuthenticatedKingdanstoreBrandingRoute
+  '/kingdanstore/categories': typeof AuthenticatedKingdanstoreCategoriesRoute
+  '/kingdanstore/certificates': typeof AuthenticatedKingdanstoreCertificatesRoute
+  '/kingdanstore/couriers': typeof AuthenticatedKingdanstoreCouriersRoute
+  '/kingdanstore/email': typeof AuthenticatedKingdanstoreEmailRoute
+  '/kingdanstore/mpesa': typeof AuthenticatedKingdanstoreMpesaRoute
+  '/kingdanstore/orders': typeof AuthenticatedKingdanstoreOrdersRoute
+  '/kingdanstore/products': typeof AuthenticatedKingdanstoreProductsRoute
+  '/kingdanstore/whatsapp': typeof AuthenticatedKingdanstoreWhatsappRoute
+  '/kingdanstore': typeof AuthenticatedKingdanstoreIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/api/public/mpesa/callback': typeof ApiPublicMpesaCallbackRoute
 }
@@ -220,20 +225,20 @@ export interface FileRoutesById {
   '/shop': typeof ShopRoute
   '/track': typeof TrackRoute
   '/verify': typeof VerifyRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/kingdanstore': typeof AuthenticatedKingdanstoreRouteWithChildren
   '/order/$code': typeof OrderCodeRoute
   '/product/$slug': typeof ProductSlugRoute
-  '/_authenticated/admin/ads': typeof AuthenticatedAdminAdsRoute
-  '/_authenticated/admin/branding': typeof AuthenticatedAdminBrandingRoute
-  '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
-  '/_authenticated/admin/certificates': typeof AuthenticatedAdminCertificatesRoute
-  '/_authenticated/admin/couriers': typeof AuthenticatedAdminCouriersRoute
-  '/_authenticated/admin/email': typeof AuthenticatedAdminEmailRoute
-  '/_authenticated/admin/mpesa': typeof AuthenticatedAdminMpesaRoute
-  '/_authenticated/admin/orders': typeof AuthenticatedAdminOrdersRoute
-  '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRoute
-  '/_authenticated/admin/whatsapp': typeof AuthenticatedAdminWhatsappRoute
-  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/kingdanstore/ads': typeof AuthenticatedKingdanstoreAdsRoute
+  '/_authenticated/kingdanstore/branding': typeof AuthenticatedKingdanstoreBrandingRoute
+  '/_authenticated/kingdanstore/categories': typeof AuthenticatedKingdanstoreCategoriesRoute
+  '/_authenticated/kingdanstore/certificates': typeof AuthenticatedKingdanstoreCertificatesRoute
+  '/_authenticated/kingdanstore/couriers': typeof AuthenticatedKingdanstoreCouriersRoute
+  '/_authenticated/kingdanstore/email': typeof AuthenticatedKingdanstoreEmailRoute
+  '/_authenticated/kingdanstore/mpesa': typeof AuthenticatedKingdanstoreMpesaRoute
+  '/_authenticated/kingdanstore/orders': typeof AuthenticatedKingdanstoreOrdersRoute
+  '/_authenticated/kingdanstore/products': typeof AuthenticatedKingdanstoreProductsRoute
+  '/_authenticated/kingdanstore/whatsapp': typeof AuthenticatedKingdanstoreWhatsappRoute
+  '/_authenticated/kingdanstore/': typeof AuthenticatedKingdanstoreIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/api/public/mpesa/callback': typeof ApiPublicMpesaCallbackRoute
 }
@@ -247,20 +252,20 @@ export interface FileRouteTypes {
     | '/shop'
     | '/track'
     | '/verify'
-    | '/admin'
+    | '/kingdanstore'
     | '/order/$code'
     | '/product/$slug'
-    | '/admin/ads'
-    | '/admin/branding'
-    | '/admin/categories'
-    | '/admin/certificates'
-    | '/admin/couriers'
-    | '/admin/email'
-    | '/admin/mpesa'
-    | '/admin/orders'
-    | '/admin/products'
-    | '/admin/whatsapp'
-    | '/admin/'
+    | '/kingdanstore/ads'
+    | '/kingdanstore/branding'
+    | '/kingdanstore/categories'
+    | '/kingdanstore/certificates'
+    | '/kingdanstore/couriers'
+    | '/kingdanstore/email'
+    | '/kingdanstore/mpesa'
+    | '/kingdanstore/orders'
+    | '/kingdanstore/products'
+    | '/kingdanstore/whatsapp'
+    | '/kingdanstore/'
     | '/api/public/media/$'
     | '/api/public/mpesa/callback'
   fileRoutesByTo: FileRoutesByTo
@@ -274,17 +279,17 @@ export interface FileRouteTypes {
     | '/verify'
     | '/order/$code'
     | '/product/$slug'
-    | '/admin/ads'
-    | '/admin/branding'
-    | '/admin/categories'
-    | '/admin/certificates'
-    | '/admin/couriers'
-    | '/admin/email'
-    | '/admin/mpesa'
-    | '/admin/orders'
-    | '/admin/products'
-    | '/admin/whatsapp'
-    | '/admin'
+    | '/kingdanstore/ads'
+    | '/kingdanstore/branding'
+    | '/kingdanstore/categories'
+    | '/kingdanstore/certificates'
+    | '/kingdanstore/couriers'
+    | '/kingdanstore/email'
+    | '/kingdanstore/mpesa'
+    | '/kingdanstore/orders'
+    | '/kingdanstore/products'
+    | '/kingdanstore/whatsapp'
+    | '/kingdanstore'
     | '/api/public/media/$'
     | '/api/public/mpesa/callback'
   id:
@@ -297,20 +302,20 @@ export interface FileRouteTypes {
     | '/shop'
     | '/track'
     | '/verify'
-    | '/_authenticated/admin'
+    | '/_authenticated/kingdanstore'
     | '/order/$code'
     | '/product/$slug'
-    | '/_authenticated/admin/ads'
-    | '/_authenticated/admin/branding'
-    | '/_authenticated/admin/categories'
-    | '/_authenticated/admin/certificates'
-    | '/_authenticated/admin/couriers'
-    | '/_authenticated/admin/email'
-    | '/_authenticated/admin/mpesa'
-    | '/_authenticated/admin/orders'
-    | '/_authenticated/admin/products'
-    | '/_authenticated/admin/whatsapp'
-    | '/_authenticated/admin/'
+    | '/_authenticated/kingdanstore/ads'
+    | '/_authenticated/kingdanstore/branding'
+    | '/_authenticated/kingdanstore/categories'
+    | '/_authenticated/kingdanstore/certificates'
+    | '/_authenticated/kingdanstore/couriers'
+    | '/_authenticated/kingdanstore/email'
+    | '/_authenticated/kingdanstore/mpesa'
+    | '/_authenticated/kingdanstore/orders'
+    | '/_authenticated/kingdanstore/products'
+    | '/_authenticated/kingdanstore/whatsapp'
+    | '/_authenticated/kingdanstore/'
     | '/api/public/media/$'
     | '/api/public/mpesa/callback'
   fileRoutesById: FileRoutesById
@@ -388,11 +393,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VerifyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/admin': {
-      id: '/_authenticated/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+    '/_authenticated/kingdanstore': {
+      id: '/_authenticated/kingdanstore'
+      path: '/kingdanstore'
+      fullPath: '/kingdanstore'
+      preLoaderRoute: typeof AuthenticatedKingdanstoreRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/order/$code': {
@@ -409,82 +414,82 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/admin/': {
-      id: '/_authenticated/admin/'
+    '/_authenticated/kingdanstore/': {
+      id: '/_authenticated/kingdanstore/'
       path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
+      fullPath: '/kingdanstore/'
+      preLoaderRoute: typeof AuthenticatedKingdanstoreIndexRouteImport
+      parentRoute: typeof AuthenticatedKingdanstoreRoute
     }
-    '/_authenticated/admin/ads': {
-      id: '/_authenticated/admin/ads'
+    '/_authenticated/kingdanstore/ads': {
+      id: '/_authenticated/kingdanstore/ads'
       path: '/ads'
-      fullPath: '/admin/ads'
-      preLoaderRoute: typeof AuthenticatedAdminAdsRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
+      fullPath: '/kingdanstore/ads'
+      preLoaderRoute: typeof AuthenticatedKingdanstoreAdsRouteImport
+      parentRoute: typeof AuthenticatedKingdanstoreRoute
     }
-    '/_authenticated/admin/branding': {
-      id: '/_authenticated/admin/branding'
+    '/_authenticated/kingdanstore/branding': {
+      id: '/_authenticated/kingdanstore/branding'
       path: '/branding'
-      fullPath: '/admin/branding'
-      preLoaderRoute: typeof AuthenticatedAdminBrandingRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
+      fullPath: '/kingdanstore/branding'
+      preLoaderRoute: typeof AuthenticatedKingdanstoreBrandingRouteImport
+      parentRoute: typeof AuthenticatedKingdanstoreRoute
     }
-    '/_authenticated/admin/categories': {
-      id: '/_authenticated/admin/categories'
+    '/_authenticated/kingdanstore/categories': {
+      id: '/_authenticated/kingdanstore/categories'
       path: '/categories'
-      fullPath: '/admin/categories'
-      preLoaderRoute: typeof AuthenticatedAdminCategoriesRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
+      fullPath: '/kingdanstore/categories'
+      preLoaderRoute: typeof AuthenticatedKingdanstoreCategoriesRouteImport
+      parentRoute: typeof AuthenticatedKingdanstoreRoute
     }
-    '/_authenticated/admin/certificates': {
-      id: '/_authenticated/admin/certificates'
+    '/_authenticated/kingdanstore/certificates': {
+      id: '/_authenticated/kingdanstore/certificates'
       path: '/certificates'
-      fullPath: '/admin/certificates'
-      preLoaderRoute: typeof AuthenticatedAdminCertificatesRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
+      fullPath: '/kingdanstore/certificates'
+      preLoaderRoute: typeof AuthenticatedKingdanstoreCertificatesRouteImport
+      parentRoute: typeof AuthenticatedKingdanstoreRoute
     }
-    '/_authenticated/admin/couriers': {
-      id: '/_authenticated/admin/couriers'
+    '/_authenticated/kingdanstore/couriers': {
+      id: '/_authenticated/kingdanstore/couriers'
       path: '/couriers'
-      fullPath: '/admin/couriers'
-      preLoaderRoute: typeof AuthenticatedAdminCouriersRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
+      fullPath: '/kingdanstore/couriers'
+      preLoaderRoute: typeof AuthenticatedKingdanstoreCouriersRouteImport
+      parentRoute: typeof AuthenticatedKingdanstoreRoute
     }
-    '/_authenticated/admin/email': {
-      id: '/_authenticated/admin/email'
+    '/_authenticated/kingdanstore/email': {
+      id: '/_authenticated/kingdanstore/email'
       path: '/email'
-      fullPath: '/admin/email'
-      preLoaderRoute: typeof AuthenticatedAdminEmailRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
+      fullPath: '/kingdanstore/email'
+      preLoaderRoute: typeof AuthenticatedKingdanstoreEmailRouteImport
+      parentRoute: typeof AuthenticatedKingdanstoreRoute
     }
-    '/_authenticated/admin/mpesa': {
-      id: '/_authenticated/admin/mpesa'
+    '/_authenticated/kingdanstore/mpesa': {
+      id: '/_authenticated/kingdanstore/mpesa'
       path: '/mpesa'
-      fullPath: '/admin/mpesa'
-      preLoaderRoute: typeof AuthenticatedAdminMpesaRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
+      fullPath: '/kingdanstore/mpesa'
+      preLoaderRoute: typeof AuthenticatedKingdanstoreMpesaRouteImport
+      parentRoute: typeof AuthenticatedKingdanstoreRoute
     }
-    '/_authenticated/admin/orders': {
-      id: '/_authenticated/admin/orders'
+    '/_authenticated/kingdanstore/orders': {
+      id: '/_authenticated/kingdanstore/orders'
       path: '/orders'
-      fullPath: '/admin/orders'
-      preLoaderRoute: typeof AuthenticatedAdminOrdersRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
+      fullPath: '/kingdanstore/orders'
+      preLoaderRoute: typeof AuthenticatedKingdanstoreOrdersRouteImport
+      parentRoute: typeof AuthenticatedKingdanstoreRoute
     }
-    '/_authenticated/admin/products': {
-      id: '/_authenticated/admin/products'
+    '/_authenticated/kingdanstore/products': {
+      id: '/_authenticated/kingdanstore/products'
       path: '/products'
-      fullPath: '/admin/products'
-      preLoaderRoute: typeof AuthenticatedAdminProductsRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
+      fullPath: '/kingdanstore/products'
+      preLoaderRoute: typeof AuthenticatedKingdanstoreProductsRouteImport
+      parentRoute: typeof AuthenticatedKingdanstoreRoute
     }
-    '/_authenticated/admin/whatsapp': {
-      id: '/_authenticated/admin/whatsapp'
+    '/_authenticated/kingdanstore/whatsapp': {
+      id: '/_authenticated/kingdanstore/whatsapp'
       path: '/whatsapp'
-      fullPath: '/admin/whatsapp'
-      preLoaderRoute: typeof AuthenticatedAdminWhatsappRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
+      fullPath: '/kingdanstore/whatsapp'
+      preLoaderRoute: typeof AuthenticatedKingdanstoreWhatsappRouteImport
+      parentRoute: typeof AuthenticatedKingdanstoreRoute
     }
     '/api/public/media/$': {
       id: '/api/public/media/$'
@@ -503,43 +508,52 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AuthenticatedAdminRouteChildren {
-  AuthenticatedAdminAdsRoute: typeof AuthenticatedAdminAdsRoute
-  AuthenticatedAdminBrandingRoute: typeof AuthenticatedAdminBrandingRoute
-  AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
-  AuthenticatedAdminCertificatesRoute: typeof AuthenticatedAdminCertificatesRoute
-  AuthenticatedAdminCouriersRoute: typeof AuthenticatedAdminCouriersRoute
-  AuthenticatedAdminEmailRoute: typeof AuthenticatedAdminEmailRoute
-  AuthenticatedAdminMpesaRoute: typeof AuthenticatedAdminMpesaRoute
-  AuthenticatedAdminOrdersRoute: typeof AuthenticatedAdminOrdersRoute
-  AuthenticatedAdminProductsRoute: typeof AuthenticatedAdminProductsRoute
-  AuthenticatedAdminWhatsappRoute: typeof AuthenticatedAdminWhatsappRoute
-  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+interface AuthenticatedKingdanstoreRouteChildren {
+  AuthenticatedKingdanstoreAdsRoute: typeof AuthenticatedKingdanstoreAdsRoute
+  AuthenticatedKingdanstoreBrandingRoute: typeof AuthenticatedKingdanstoreBrandingRoute
+  AuthenticatedKingdanstoreCategoriesRoute: typeof AuthenticatedKingdanstoreCategoriesRoute
+  AuthenticatedKingdanstoreCertificatesRoute: typeof AuthenticatedKingdanstoreCertificatesRoute
+  AuthenticatedKingdanstoreCouriersRoute: typeof AuthenticatedKingdanstoreCouriersRoute
+  AuthenticatedKingdanstoreEmailRoute: typeof AuthenticatedKingdanstoreEmailRoute
+  AuthenticatedKingdanstoreMpesaRoute: typeof AuthenticatedKingdanstoreMpesaRoute
+  AuthenticatedKingdanstoreOrdersRoute: typeof AuthenticatedKingdanstoreOrdersRoute
+  AuthenticatedKingdanstoreProductsRoute: typeof AuthenticatedKingdanstoreProductsRoute
+  AuthenticatedKingdanstoreWhatsappRoute: typeof AuthenticatedKingdanstoreWhatsappRoute
+  AuthenticatedKingdanstoreIndexRoute: typeof AuthenticatedKingdanstoreIndexRoute
 }
 
-const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
-  AuthenticatedAdminAdsRoute: AuthenticatedAdminAdsRoute,
-  AuthenticatedAdminBrandingRoute: AuthenticatedAdminBrandingRoute,
-  AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
-  AuthenticatedAdminCertificatesRoute: AuthenticatedAdminCertificatesRoute,
-  AuthenticatedAdminCouriersRoute: AuthenticatedAdminCouriersRoute,
-  AuthenticatedAdminEmailRoute: AuthenticatedAdminEmailRoute,
-  AuthenticatedAdminMpesaRoute: AuthenticatedAdminMpesaRoute,
-  AuthenticatedAdminOrdersRoute: AuthenticatedAdminOrdersRoute,
-  AuthenticatedAdminProductsRoute: AuthenticatedAdminProductsRoute,
-  AuthenticatedAdminWhatsappRoute: AuthenticatedAdminWhatsappRoute,
-  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
-}
+const AuthenticatedKingdanstoreRouteChildren: AuthenticatedKingdanstoreRouteChildren =
+  {
+    AuthenticatedKingdanstoreAdsRoute: AuthenticatedKingdanstoreAdsRoute,
+    AuthenticatedKingdanstoreBrandingRoute:
+      AuthenticatedKingdanstoreBrandingRoute,
+    AuthenticatedKingdanstoreCategoriesRoute:
+      AuthenticatedKingdanstoreCategoriesRoute,
+    AuthenticatedKingdanstoreCertificatesRoute:
+      AuthenticatedKingdanstoreCertificatesRoute,
+    AuthenticatedKingdanstoreCouriersRoute:
+      AuthenticatedKingdanstoreCouriersRoute,
+    AuthenticatedKingdanstoreEmailRoute: AuthenticatedKingdanstoreEmailRoute,
+    AuthenticatedKingdanstoreMpesaRoute: AuthenticatedKingdanstoreMpesaRoute,
+    AuthenticatedKingdanstoreOrdersRoute: AuthenticatedKingdanstoreOrdersRoute,
+    AuthenticatedKingdanstoreProductsRoute:
+      AuthenticatedKingdanstoreProductsRoute,
+    AuthenticatedKingdanstoreWhatsappRoute:
+      AuthenticatedKingdanstoreWhatsappRoute,
+    AuthenticatedKingdanstoreIndexRoute: AuthenticatedKingdanstoreIndexRoute,
+  }
 
-const AuthenticatedAdminRouteWithChildren =
-  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+const AuthenticatedKingdanstoreRouteWithChildren =
+  AuthenticatedKingdanstoreRoute._addFileChildren(
+    AuthenticatedKingdanstoreRouteChildren,
+  )
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedKingdanstoreRoute: typeof AuthenticatedKingdanstoreRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedKingdanstoreRoute: AuthenticatedKingdanstoreRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =

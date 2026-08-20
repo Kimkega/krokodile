@@ -17,7 +17,7 @@ import {
 import { cn } from "@/lib/utils";
 import logoUrl from "@/assets/kroko-logo.png";
 
-export const Route = createFileRoute("/_authenticated/admin")({
+export const Route = createFileRoute("/_authenticated/kingdanstore")({
   head: () => ({
     meta: [
       { title: "Admin Dashboard — KROKO DILE" },
@@ -30,17 +30,17 @@ export const Route = createFileRoute("/_authenticated/admin")({
 });
 
 const NAV = [
-  { to: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
-  { to: "/admin/orders", label: "Orders", icon: Receipt },
-  { to: "/admin/products", label: "Products", icon: Package },
-  { to: "/admin/categories", label: "Categories", icon: Layers },
-  { to: "/admin/couriers", label: "Couriers", icon: Truck },
-  { to: "/admin/ads", label: "Adverts", icon: Megaphone },
-  { to: "/admin/certificates", label: "Authenticity", icon: BadgeCheck },
-  { to: "/admin/whatsapp", label: "WhatsApp", icon: MessageCircle },
-  { to: "/admin/branding", label: "Branding", icon: Palette },
-  { to: "/admin/mpesa", label: "M-Pesa", icon: Smartphone },
-  { to: "/admin/email", label: "Email / SMTP", icon: Mail },
+  { to: "/kingdanstore", label: "Overview", icon: LayoutDashboard, exact: true },
+  { to: "/kingdanstore/orders", label: "Orders", icon: Receipt },
+  { to: "/kingdanstore/products", label: "Products", icon: Package },
+  { to: "/kingdanstore/categories", label: "Categories", icon: Layers },
+  { to: "/kingdanstore/couriers", label: "Couriers", icon: Truck },
+  { to: "/kingdanstore/ads", label: "Adverts", icon: Megaphone },
+  { to: "/kingdanstore/certificates", label: "Authenticity", icon: BadgeCheck },
+  { to: "/kingdanstore/whatsapp", label: "WhatsApp", icon: MessageCircle },
+  { to: "/kingdanstore/branding", label: "Branding", icon: Palette },
+  { to: "/kingdanstore/mpesa", label: "M-Pesa", icon: Smartphone },
+  { to: "/kingdanstore/email", label: "Email / SMTP", icon: Mail },
 ] as const;
 
 function AdminLayout() {

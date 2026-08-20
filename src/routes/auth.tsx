@@ -34,7 +34,7 @@ function Auth() {
       toast.error(error.message);
       return;
     }
-    navigate({ to: "/admin" });
+    navigate({ to: "/kingdanstore" });
   }
 
   return (

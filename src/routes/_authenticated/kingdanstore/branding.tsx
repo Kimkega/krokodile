@@ -9,7 +9,7 @@ import { mediaUrl } from "@/lib/media";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export const Route = createFileRoute("/_authenticated/admin/branding")({
+export const Route = createFileRoute("/_authenticated/kingdanstore/branding")({
   component: AdminBranding,
 });
 
