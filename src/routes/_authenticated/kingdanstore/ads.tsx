@@ -6,7 +6,7 @@ import { formatKes } from "@/lib/format";
 import { mediaUrl } from "@/lib/media";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/_authenticated/admin/ads")({
+export const Route = createFileRoute("/_authenticated/kingdanstore/ads")({
   component: AdminAds,
 });
 

@@ -266,6 +266,39 @@ export type Database = {
         }
         Relationships: []
       }
+      faqs: {
+        Row: {
+          active: boolean
+          answer: string
+          category: string
+          created_at: string
+          id: string
+          question: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          answer: string
+          category?: string
+          created_at?: string
+          id?: string
+          question: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          answer?: string
+          category?: string
+          created_at?: string
+          id?: string
+          question?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       mpesa_config: {
         Row: {
           account_reference: string | null
@@ -582,6 +615,111 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      seo_pages: {
+        Row: {
+          changefreq: string
+          created_at: string
+          description: string | null
+          id: string
+          in_sitemap: boolean
+          indexed: boolean
+          keywords: string | null
+          label: string
+          path: string
+          priority: number
+          sort_order: number
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          changefreq?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          in_sitemap?: boolean
+          indexed?: boolean
+          keywords?: string | null
+          label: string
+          path: string
+          priority?: number
+          sort_order?: number
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          changefreq?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          in_sitemap?: boolean
+          indexed?: boolean
+          keywords?: string | null
+          label?: string
+          path?: string
+          priority?: number
+          sort_order?: number
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      seo_settings: {
+        Row: {
+          bing_site_verification: string | null
+          canonical_base_url: string | null
+          default_description: string
+          default_keywords: string | null
+          default_title: string
+          google_site_verification: string | null
+          id: string
+          indexing_enabled: boolean
+          og_image_url: string | null
+          organization_logo_url: string | null
+          organization_name: string | null
+          robots_extra: string | null
+          sitemap_enabled: boolean
+          title_suffix: string | null
+          twitter_handle: string | null
+          updated_at: string
+        }
+        Insert: {
+          bing_site_verification?: string | null
+          canonical_base_url?: string | null
+          default_description?: string
+          default_keywords?: string | null
+          default_title?: string
+          google_site_verification?: string | null
+          id?: string
+          indexing_enabled?: boolean
+          og_image_url?: string | null
+          organization_logo_url?: string | null
+          organization_name?: string | null
+          robots_extra?: string | null
+          sitemap_enabled?: boolean
+          title_suffix?: string | null
+          twitter_handle?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bing_site_verification?: string | null
+          canonical_base_url?: string | null
+          default_description?: string
+          default_keywords?: string | null
+          default_title?: string
+          google_site_verification?: string | null
+          id?: string
+          indexing_enabled?: boolean
+          og_image_url?: string | null
+          organization_logo_url?: string | null
+          organization_name?: string | null
+          robots_extra?: string | null
+          sitemap_enabled?: boolean
+          title_suffix?: string | null
+          twitter_handle?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       shipping_zones: {
         Row: {
