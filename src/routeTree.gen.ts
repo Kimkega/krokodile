@@ -33,6 +33,7 @@ import { Route as AuthenticatedKingdanstoreEmailRouteImport } from './routes/_au
 import { Route as AuthenticatedKingdanstoreMpesaRouteImport } from './routes/_authenticated/kingdanstore/mpesa'
 import { Route as AuthenticatedKingdanstoreOrdersRouteImport } from './routes/_authenticated/kingdanstore/orders'
 import { Route as AuthenticatedKingdanstoreProductsRouteImport } from './routes/_authenticated/kingdanstore/products'
+import { Route as AuthenticatedKingdanstoreSeoRouteImport } from './routes/_authenticated/kingdanstore/seo'
 import { Route as AuthenticatedKingdanstoreWhatsappRouteImport } from './routes/_authenticated/kingdanstore/whatsapp'
 import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media/$'
 import { Route as ApiPublicMpesaCallbackRouteImport } from './routes/api/public/mpesa/callback'
@@ -167,6 +168,12 @@ const AuthenticatedKingdanstoreProductsRoute =
     path: '/products',
     getParentRoute: () => AuthenticatedKingdanstoreRoute,
   } as any)
+const AuthenticatedKingdanstoreSeoRoute =
+  AuthenticatedKingdanstoreSeoRouteImport.update({
+    id: '/seo',
+    path: '/seo',
+    getParentRoute: () => AuthenticatedKingdanstoreRoute,
+  } as any)
 const AuthenticatedKingdanstoreWhatsappRoute =
   AuthenticatedKingdanstoreWhatsappRouteImport.update({
     id: '/whatsapp',
@@ -207,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/kingdanstore/mpesa': typeof AuthenticatedKingdanstoreMpesaRoute
   '/kingdanstore/orders': typeof AuthenticatedKingdanstoreOrdersRoute
   '/kingdanstore/products': typeof AuthenticatedKingdanstoreProductsRoute
+  '/kingdanstore/seo': typeof AuthenticatedKingdanstoreSeoRoute
   '/kingdanstore/whatsapp': typeof AuthenticatedKingdanstoreWhatsappRoute
   '/kingdanstore/': typeof AuthenticatedKingdanstoreIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
@@ -234,6 +242,7 @@ export interface FileRoutesByTo {
   '/kingdanstore/mpesa': typeof AuthenticatedKingdanstoreMpesaRoute
   '/kingdanstore/orders': typeof AuthenticatedKingdanstoreOrdersRoute
   '/kingdanstore/products': typeof AuthenticatedKingdanstoreProductsRoute
+  '/kingdanstore/seo': typeof AuthenticatedKingdanstoreSeoRoute
   '/kingdanstore/whatsapp': typeof AuthenticatedKingdanstoreWhatsappRoute
   '/kingdanstore': typeof AuthenticatedKingdanstoreIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
@@ -264,6 +273,7 @@ export interface FileRoutesById {
   '/_authenticated/kingdanstore/mpesa': typeof AuthenticatedKingdanstoreMpesaRoute
   '/_authenticated/kingdanstore/orders': typeof AuthenticatedKingdanstoreOrdersRoute
   '/_authenticated/kingdanstore/products': typeof AuthenticatedKingdanstoreProductsRoute
+  '/_authenticated/kingdanstore/seo': typeof AuthenticatedKingdanstoreSeoRoute
   '/_authenticated/kingdanstore/whatsapp': typeof AuthenticatedKingdanstoreWhatsappRoute
   '/_authenticated/kingdanstore/': typeof AuthenticatedKingdanstoreIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
@@ -294,6 +304,7 @@ export interface FileRouteTypes {
     | '/kingdanstore/mpesa'
     | '/kingdanstore/orders'
     | '/kingdanstore/products'
+    | '/kingdanstore/seo'
     | '/kingdanstore/whatsapp'
     | '/kingdanstore/'
     | '/api/public/media/$'
@@ -321,6 +332,7 @@ export interface FileRouteTypes {
     | '/kingdanstore/mpesa'
     | '/kingdanstore/orders'
     | '/kingdanstore/products'
+    | '/kingdanstore/seo'
     | '/kingdanstore/whatsapp'
     | '/kingdanstore'
     | '/api/public/media/$'
@@ -350,6 +362,7 @@ export interface FileRouteTypes {
     | '/_authenticated/kingdanstore/mpesa'
     | '/_authenticated/kingdanstore/orders'
     | '/_authenticated/kingdanstore/products'
+    | '/_authenticated/kingdanstore/seo'
     | '/_authenticated/kingdanstore/whatsapp'
     | '/_authenticated/kingdanstore/'
     | '/api/public/media/$'
@@ -544,6 +557,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedKingdanstoreProductsRouteImport
       parentRoute: typeof AuthenticatedKingdanstoreRoute
     }
+    '/_authenticated/kingdanstore/seo': {
+      id: '/_authenticated/kingdanstore/seo'
+      path: '/seo'
+      fullPath: '/kingdanstore/seo'
+      preLoaderRoute: typeof AuthenticatedKingdanstoreSeoRouteImport
+      parentRoute: typeof AuthenticatedKingdanstoreRoute
+    }
     '/_authenticated/kingdanstore/whatsapp': {
       id: '/_authenticated/kingdanstore/whatsapp'
       path: '/whatsapp'
@@ -578,6 +598,7 @@ interface AuthenticatedKingdanstoreRouteChildren {
   AuthenticatedKingdanstoreMpesaRoute: typeof AuthenticatedKingdanstoreMpesaRoute
   AuthenticatedKingdanstoreOrdersRoute: typeof AuthenticatedKingdanstoreOrdersRoute
   AuthenticatedKingdanstoreProductsRoute: typeof AuthenticatedKingdanstoreProductsRoute
+  AuthenticatedKingdanstoreSeoRoute: typeof AuthenticatedKingdanstoreSeoRoute
   AuthenticatedKingdanstoreWhatsappRoute: typeof AuthenticatedKingdanstoreWhatsappRoute
   AuthenticatedKingdanstoreIndexRoute: typeof AuthenticatedKingdanstoreIndexRoute
 }
@@ -598,6 +619,7 @@ const AuthenticatedKingdanstoreRouteChildren: AuthenticatedKingdanstoreRouteChil
     AuthenticatedKingdanstoreOrdersRoute: AuthenticatedKingdanstoreOrdersRoute,
     AuthenticatedKingdanstoreProductsRoute:
       AuthenticatedKingdanstoreProductsRoute,
+    AuthenticatedKingdanstoreSeoRoute: AuthenticatedKingdanstoreSeoRoute,
     AuthenticatedKingdanstoreWhatsappRoute:
       AuthenticatedKingdanstoreWhatsappRoute,
     AuthenticatedKingdanstoreIndexRoute: AuthenticatedKingdanstoreIndexRoute,
