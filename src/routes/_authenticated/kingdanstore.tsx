@@ -11,6 +11,7 @@ import {
   Package,
   Palette,
   Receipt,
+  Search,
   Smartphone,
   Truck,
 } from "lucide-react";
@@ -41,6 +42,7 @@ const NAV = [
   { to: "/kingdanstore/branding", label: "Branding", icon: Palette },
   { to: "/kingdanstore/mpesa", label: "M-Pesa", icon: Smartphone },
   { to: "/kingdanstore/email", label: "Email / SMTP", icon: Mail },
+  { to: "/kingdanstore/seo", label: "Search engines", icon: Search },
 ] as const;
 
 function AdminLayout() {

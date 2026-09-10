@@ -27,7 +27,12 @@ export function Footer() {
               <li>
                 <Link to="/verify">Verify authenticity</Link>
               </li>
-
+              <li>
+                <Link to="/advertise">Advertise with us</Link>
+              </li>
+              <li>
+                <Link to="/terms">Terms &amp; policies</Link>
+              </li>
             </ul>
           </div>
           <div>
