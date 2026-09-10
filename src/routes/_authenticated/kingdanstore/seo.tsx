@@ -53,9 +53,15 @@ function AdminSeo() {
     draft[key as string] ?? ((settings as unknown as Record<string, string | null>)?.[key as string] ?? "");
 
   const saveSettings = async () => {
-    if (!settings?.id) return toast.error("SEO settings not initialised");
+    if (!settings?.id) {
+      toast.error("SEO settings not initialised");
+      return;
+    }
     const { error } = await supabase.from("seo_settings").update(draft as never).eq("id", settings.id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("SEO settings saved");
     setDraft({});
     void qc.invalidateQueries({ queryKey: ["seo-settings"] });
@@ -67,13 +73,19 @@ function AdminSeo() {
       .from("seo_settings")
       .update({ [key]: value } as never)
       .eq("id", settings.id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     void qc.invalidateQueries({ queryKey: ["seo-settings"] });
   };
 
   const savePage = async (page: SeoPage, patch: Partial<SeoPage>) => {
     const { error } = await supabase.from("seo_pages").update(patch as never).eq("id", page.id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success(`${page.label} updated`);
     void qc.invalidateQueries({ queryKey: ["admin", "seo-pages"] });
   };
@@ -86,20 +98,29 @@ function AdminSeo() {
       sort_order: (faqs?.length ?? 0) + 1,
       active: false,
     } as never);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     void qc.invalidateQueries({ queryKey: ["admin", "faqs"] });
   };
 
   const saveFaq = async (faq: Faq, patch: Partial<Faq>) => {
     const { error } = await supabase.from("faqs").update(patch as never).eq("id", faq.id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     void qc.invalidateQueries({ queryKey: ["admin", "faqs"] });
     void qc.invalidateQueries({ queryKey: ["faqs"] });
   };
 
   const deleteFaq = async (id: string) => {
     const { error } = await supabase.from("faqs").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     void qc.invalidateQueries({ queryKey: ["admin", "faqs"] });
     void qc.invalidateQueries({ queryKey: ["faqs"] });
   };
