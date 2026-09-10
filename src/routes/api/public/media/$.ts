@@ -19,7 +19,7 @@ function env(...names: string[]): string {
 export const Route = createFileRoute("/api/public/media/$")({
   server: {
     handlers: {
-      GET: async ({ params }) => {
+      GET: async ({ params, request }) => {
         const path = params._splat ?? "";
         if (!path || path.includes("..")) return new Response("Not found", { status: 404 });
 
