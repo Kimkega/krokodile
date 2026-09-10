@@ -7,6 +7,8 @@ import { ProductCard, type ProductCardData } from "@/components/products/Product
 import { Hero3DCarousel } from "@/components/home/Hero3DCarousel";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { mediaUrl } from "@/lib/media";
+import { FaqSection } from "@/components/home/FaqSection";
+import { JsonLd } from "@/components/seo/JsonLd";
 import logoUrl from "@/assets/kroko-logo.png";
 
 export const Route = createFileRoute("/")({
@@ -148,6 +150,40 @@ function Home() {
           ))}
         </div>
       </section>
+
+      <FaqSection />
+
+      <JsonLd
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Store",
+            name: settings?.site_name ?? "KROKO DILE",
+            description:
+              settings?.tagline ?? "Hand-finished luxury leather bags for men and women, made in Kenya.",
+            image: logoSrc,
+            address: { "@type": "PostalAddress", addressLocality: "Nairobi", addressCountry: "KE" },
+            ...(settings?.contact_phone ? { telephone: settings.contact_phone } : {}),
+            ...(settings?.contact_email ? { email: settings.contact_email } : {}),
+            areaServed: "KE",
+            currenciesAccepted: "KES",
+            paymentAccepted: "M-Pesa",
+            sameAs: [settings?.instagram_url, settings?.facebook_url, settings?.tiktok_url, settings?.x_url].filter(
+              Boolean,
+            ),
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: settings?.site_name ?? "KROKO DILE",
+            potentialAction: {
+              "@type": "SearchAction",
+              target: "/shop?q={search_term_string}",
+              "query-input": "required name=search_term_string",
+            },
+          },
+        ]}
+      />
     </SiteShell>
   );
 }
