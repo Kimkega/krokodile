@@ -3,9 +3,14 @@
   "private": true,
   "sideEffects": false,
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
+    "build:node": "NITRO_PRESET=node_server vite build",
+    "start": "node .output/server/index.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
