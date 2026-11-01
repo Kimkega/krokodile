@@ -8,3 +8,7 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Deployment outside Lovable
+
+- Non-Lovable hosts (Render, Railway, etc.) must build with `NITRO_PRESET=node_server` and start with `npm start` (`node .output/server/index.mjs`) — the default Lovable build targets Cloudflare Workers, which Node hosts cannot run; `render.yaml` already sets both. Supabase env vars must be set at build time for `VITE_*` and at runtime for server keys.
