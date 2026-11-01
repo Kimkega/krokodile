@@ -1,0 +1,45 @@
+# Render Blueprint — deploys KROKO DILE as a Node web service (SSR app).
+# Deploy via Render Dashboard → New → Blueprint, or push this file and it is picked up.
+#
+# IMPORTANT: this is a full-stack (SSR) app — deploy as a **Web Service**, NOT a
+# "Static Site". A Static Site expects a publish directory and cannot run the
+# server, which is why "Publish directory dist does not exist" appears when
+# misconfigured.
+#
+# Fill in the `sync: false` variables in the Render dashboard (they are asked
+# for when the blueprint is applied). Point them at ANY Supabase project:
+# the app reads them at build time (VITE_*) and at runtime (server keys), so
+# swapping projects only needs new values + redeploy.
+
+services:
+  - type: web
+    name: krokodile
+    runtime: node
+    plan: starter
+    autoDeploy: true
+    healthCheckPath: /robots.txt
+    buildCommand: npm install --no-audit --no-fund && npm run build
+    startCommand: npm start
+    envVars:
+      # --- Build/runtime engine -------------------------------------------------
+      - key: NODE_VERSION
+        value: "22"
+      # Build a Node server instead of the Cloudflare Worker bundle
+      - key: NITRO_PRESET
+        value: node_server
+      # --- Supabase (fill in on apply) ------------------------------------------
+      # Browser-side values (baked into the client bundle at build time)
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      # Server-side values (read at request time by SSR, media proxy, sitemap)
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      # --- Optional platform secret (not required for basic serving) ------------
+      - key: LOVABLE_API_KEY
+        sync: false
